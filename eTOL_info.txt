@@ -27,7 +27,7 @@ Here, I will add all the relevant information about the diferent supergroups and
         - Apusomonada: Heterotrophic flagellate
         - Breviates: Heterotrophic flagellate
         - Opisthokonta: Animals, fungi, and their respective unicellular relatives
-    - Amoebozoa: free-living amoeboid forms with lobose pseudopodia (e.g., Amoeba)but also more filose amoebae, some flagellates, and various slime molds.
+    - Amoebozoa: free-living (and parasites???) amoeboid forms with lobose pseudopodia (e.g., Amoeba)but also more filose amoebae, some flagellates, and various slime molds.
 - CRuMs
     - Diphylleida or collodictyonids: free-living swimming flagellate
     - Rigifilida: free-living filose amoeboid cells
