@@ -1,0 +1,48 @@
+Eukaryotic tree of live main groups:
+Here, I will add all the relevant information about the diferent supergroups and and different subgroups (if relevant)
+
+- TSAR:
+    - Telonemia: Heterotrophic free-living flagellate
+    - SAR
+        - Stramenopila:
+        - Alveolata:
+        - Rhizaria: 
+- Haptista:
+    - Centrohelida: free-living protozoa with ray-like pseudopodia supported by microtubules (axopodia), which radiate from a spherical cell body.
+    - Haptophyta: 
+    - Rappermonads: Unicellular algae
+- Cryptista
+    - Palpitomonas: Heterotrophic flagellate
+    - Katablepharida: Heterotrophic flagellate
+    - Cryptophyta
+- Archaeplastida:
+    - Rhodophyta: red algae
+    - Rhodelphis: heterotrophic flagellates with a nonphotosynthetic primary plastid
+    - Chloroplastida: land plants and green algae
+    - Glaucophyta: 
+- Ancoracysta: Heterotrophic free-living flagellate
+- Picozoa: Heterotrophic free-living flagellate
+- Amorphea:
+    - Obazoa
+        - Apusomonada: Heterotrophic flagellate
+        - Breviates: Heterotrophic flagellate
+        - Opisthokonta: Animals, fungi, and their respective unicellular relatives
+    - Amoebozoa: free-living amoeboid forms with lobose pseudopodia (e.g., Amoeba)but also more filose amoebae, some flagellates, and various slime molds.
+- CRuMs
+    - Diphylleida or collodictyonids: free-living swimming flagellate
+    - Rigifilida: free-living filose amoeboid cells
+    - Mantamonas: free-living tiny gliding cells
+- Discoba: 
+    - Discicristata
+        - Euglenozoa
+            - Euglenophyte algae
+            - Trypanosomatid parasites
+            - Free-living or parasitic heterotrophic flagellate
+        - Heterolobosea: Heterotrophic amoebae and flagellates
+    - Jakobida:
+    - Tsukubamonas: Heterotrophic flagellate
+- Metamonada: Anaerobic protists. Free-living protozoa, intestinal symbionts (especially of wood-eating insects), and many parasites (e.g., Giardia, Trichomonas)
+- Malawimonadida: Free-living
+- Ancyromonadida: Free-living
+- Hemimastigophora: Free-living protozoa with two rows of flagella
+
