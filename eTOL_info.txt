@@ -4,17 +4,31 @@ Here, I will add all the relevant information about the diferent supergroups and
 - TSAR:
     - Telonemia: Heterotrophic free-living flagellate
     - SAR
-        - Stramenopila:
+        - Stramenopila: 
+            - Photosynthesic: Derived ultimately from a red algae.
+                - Diatoms (Bacillariophyta): Unicellular/colonial with bipartite siliceous "cell walls"
+                - Brown algae (Phaeophyta)
+            - Heterotrophic:
+                - Fungus-like: Generally parasite plants or aquatic organims
+                - Flagellated: One or two flagella
+                - Opalinata: two to four flagella, multiflagellated and non flagellated anaerobic Blastocystis
         - Alveolata:
-        - Rhizaria: 
+            - Apicomplexa: Non-phosynthetic plastids. Parasitic (Plasmodium, Toxoplasma gondii, Cryptosporidium parvum)
+            - Colpodellids: predate upon other protist or parasite them
+            - Chromerids: phosynthetic
+            - Dinoflagellata: autotrophs and/or grazers (many are mixotrophs)
+            - Ciliophora (ciliates): (mostly) free-living heterotrophic. Most have large number of cillia. Nuclear dimorphism (somatic macronuclei and germline micronuclei)
+        - Rhizaria: heterotrophic amoebae, flagellates and amoeboflagellates, spore-forming parasites, unusual algae
+            - Foraminifera: 
+            - Radiolarian
 - Haptista:
     - Centrohelida: free-living protozoa with ray-like pseudopodia supported by microtubules (axopodia), which radiate from a spherical cell body.
-    - Haptophyta: 
+    - Haptophyta: Plastid of red-algae origin 
     - Rappermonads: Unicellular algae
 - Cryptista
-    - Palpitomonas: Heterotrophic flagellate
-    - Katablepharida: Heterotrophic flagellate
-    - Cryptophyta
+    - Palpitomonas: Heterotrophic biflagellate
+    - Katablepharida: Heterotrophic biflagellate
+    - Cryptophyta: Two flagella and plastid with red algae origin
 - Archaeplastida:
     - Rhodophyta: red algae
     - Rhodelphis: heterotrophic flagellates with a nonphotosynthetic primary plastid
@@ -35,13 +49,16 @@ Here, I will add all the relevant information about the diferent supergroups and
 - Discoba: 
     - Discicristata
         - Euglenozoa
-            - Euglenophyte algae
-            - Trypanosomatid parasites
-            - Free-living or parasitic heterotrophic flagellate
-        - Heterolobosea: Heterotrophic amoebae and flagellates
-    - Jakobida:
+            - Euglenida: many predatory species that glide over surfaces and algae (green algae origin)
+            - Kinetoplastea: free-living or parasites flagellates
+            - Diplonemea (diplonemids): 
+        - Heterolobosea: Heterotrophic amoebae, flagellates or amoeboflagellates
+    - Jakobida: Heterotrophic flagellates
     - Tsukubamonas: Heterotrophic flagellate
 - Metamonada: Anaerobic protists. Free-living protozoa, intestinal symbionts (especially of wood-eating insects), and many parasites (e.g., Giardia, Trichomonas)
+    - Preaxostyla
+    - Parabasalia: 
+    - Fornicata
 - Malawimonadida: Free-living
 - Ancyromonadida: Free-living
 - Hemimastigophora: Free-living protozoa with two rows of flagella
