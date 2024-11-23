@@ -33,7 +33,9 @@ Here, I will add all the relevant information about the diferent supergroups and
     - Rhodophyta: red algae
     - Rhodelphis: heterotrophic flagellates with a nonphotosynthetic primary plastid
     - Chloroplastida: land plants and green algae
-    - Glaucophyta: 
+    - Glaucophyta: freshwater phototrophs
+        - Muroplast (Chloroplasts) --> has a thin peptidoglycan cell wall 
+        - Model species --> Cyanophora paradoxa --> alkaline waters, 
 - Ancoracysta: Heterotrophic free-living flagellate
 - Picozoa: Heterotrophic free-living flagellate
 - Amorphea:
