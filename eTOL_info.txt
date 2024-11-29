@@ -30,9 +30,15 @@ Here, I will add all the relevant information about the diferent supergroups and
     - Katablepharida: Heterotrophic biflagellate
     - Cryptophyta: Two flagella and plastid with red algae origin
 - Archaeplastida:
-    - Rhodophyta: red algae
+    - Rhodophyta: red algae --> probably better for background images
+        - unicellular, uni- or multiseriate filaments, large (up to 3 m) pseudoparenchymatous, branched or unbranched, terete (cylindrical) to foliose (blade-like) thalli, including crustose and erect forms, some of which are calcified
+        - Primary marine environment, but freshwater and terrestrial lineages also occur.
+        - Triphasic life --> one and two diploid phases
+        - Key trait lost --> flagella, basal bodies, light-sensing phytochromes 
     - Rhodelphis: heterotrophic flagellates with a nonphotosynthetic primary plastid
     - Chloroplastida: land plants and green algae
+        - Zygnematophyta: freshwater green algae with two unique characteristics: sexual reproduction by conjugation and absence of flagellate (mastigote) cells in the life cycle
+        - Charophyceae (Charales): fresh and occasionally in brackish water
     - Glaucophyta: freshwater phototrophs
         - Muroplast (Chloroplasts) --> has a thin peptidoglycan cell wall 
         - Model species --> Cyanophora paradoxa --> alkaline waters, 
