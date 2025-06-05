@@ -30,18 +30,45 @@ class ProtistSurvival:
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
-            # Watch for keyboard and mouse events. An event is an action that the user performs while playing the game, such as pressing a key or moving the mouse.
-            for event in pygame.event.get(): # This function returns a list of events that have taken place since the last time this function was called.
-                if event.type == pygame.QUIT:
-                    sys.exit()
-
-            # Redraw the screen during each pass through the loop.
-            self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
-            self.gintestinalis.blitme() # This line calls the blitme method of the Gintestinalis instance, which draws the protist on the screen at its current position.
-            
-            # Make the most recently drawn screen visible.
-            pygame.display.flip()
+            self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
+            self.gintestinalis.update() # This line calls the update method of the Gintestinalis instance, which updates the position and state of the protist based on user input or game logic. This is important for making the protist move or change in response to player actions
+            self._update_screen() # This function updates the screen with the current state of the game. It is called at the end of each iteration of the game loop to ensure that the screen is redrawn with the latest game elements.
             self.clock.tick(60) # This function limits the frame rate of the game to 60 frames per second. This is important for ensuring that the game runs smoothly and consistently across different hardware configurations.
+
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
+        # Watch for keyboard and mouse events. An event is an action that the user performs while playing the game, such as pressing a key or moving the mouse.
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+            # This block of code checks if a key has been pressed down. If it has, it checks which key was pressed and sets the corresponding movement flag to True.
+                if event.key == pygame.K_UP:
+                    self.gintestinalis.moving_up = True 
+                elif event.key == pygame.K_DOWN:
+                    self.gintestinalis.moving_down = True 
+                elif event.key == pygame.K_LEFT:
+                    self.gintestinalis.moving_left = True 
+                elif event.key == pygame.K_RIGHT:
+                    self.gintestinalis.moving_right = True 
+            # This block of code checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
+                if event.key == pygame.K_UP:
+                    self.gintestinalis.moving_up = False
+                elif event.key == pygame.K_DOWN:
+                    self.gintestinalis.moving_down = False
+                elif event.key == pygame.K_LEFT:
+                    self.gintestinalis.moving_left = False
+                elif event.key == pygame.K_RIGHT:
+                    self.gintestinalis.moving_right = False
+                    
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        # Redraw the screen during each pass through the loop.
+        self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
+        self.gintestinalis.blitme() # This line calls the blitme method of the Gintestinalis instance, which draws the protist on the screen at its current position.
+        # Make the most recently drawn screen visible.
+        pygame.display.flip()
+    
 
 if __name__ == '__main__':
     # Make a game instance, and run the game.
