@@ -1,6 +1,7 @@
 import sys
-
 import pygame
+
+from settings import Settings
 
 class ProtistSurvival:
     """Overall class to manage game assets and behavior."""
@@ -9,13 +10,16 @@ class ProtistSurvival:
         """Initialize the game, and create game resources."""
         pygame.init() # This function initializes the background settings that Pygame needs to work properly.
         self.clock = pygame.time.Clock() # This function creates a clock object that can be used to control the frame rate of the game.
-        self.screen = pygame.display.set_mode((1200, 775)) # This function creates a window  of the specified size, on which we'll draw all the game's graphical elements.
+        self.settings = Settings() # This line creates an instance of the Settings class, which contains all the settings for the game, such as screen size and background color.
+        
+        # The screen is where all the game elements will be displayed.
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height)) # This function creates a window or screen for the game with the specified width and height.
         # The object we assign to self.screen is a surface object. A surface in Pygame is a part of the screen where a game element can be displayed.
         pygame.display.set_caption("Protists Survival")
 
         # Set the background color of the screen.
-        self.bg_color = (230, 230, 230) # This is a tuple that represents the RGB color of the background. The values range from 0 to 255, where 0 means no color and 255 means full color.
-
+        self.bg_color = self.settings.bg_color # This line sets the background color of the screen to the value specified in the Settings class.
+    
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
