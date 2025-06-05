@@ -1,41 +1,40 @@
-import sys
 import pygame
 
-from settings import Settings
+class Protist:
+    """Base class for all protists."""
 
-class ProtistSurvival:
-    """Overall class to manage game assets and behavior."""
+    def __init__(self, ps_game, image_path): # ps_game is an instance of the ProtistSurvival class.
+        """Initialize the protist and set its starting position."""
+        self.screen = ps_game.screen
+        self.screen_rect = ps_game.screen.get_rect()
+        self.image = pygame.image.load(image_path)
+        self.rect = self.image.get_rect()
+        self.rect.midleft = self.screen_rect.midleft
 
-    def __init__(self):
-        """Initialize the game, and create game resources."""
-        pygame.init() # This function initializes the background settings that Pygame needs to work properly.
-        self.clock = pygame.time.Clock() # This function creates a clock object that can be used to control the frame rate of the game.
-        self.settings = Settings() # This line creates an instance of the Settings class, which contains all the settings for the game, such as screen size and background color.
-        
-        # The screen is where all the game elements will be displayed.
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height)) # This function creates a window or screen for the game with the specified width and height.
-        # The object we assign to self.screen is a surface object. A surface in Pygame is a part of the screen where a game element can be displayed.
-        pygame.display.set_caption("Protists Survival")
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
 
-        # Set the background color of the screen.
-        self.bg_color = self.settings.bg_color # This line sets the background color of the screen to the value specified in the Settings class.
-    
-    def run_game(self):
-        """Start the main loop for the game."""
-        while True: 
-            # Watch for keyboard and mouse events. An event is an action that the user performs while playing the game, such as pressing a key or moving the mouse.
-            for event in pygame.event.get(): # This function returns a list of events that have taken place since the last time this function was called.
-                if event.type == pygame.QUIT:
-                    sys.exit()
+class Gintestinalis(Protist):
+    """Class representing the Giardia intestinalis protist."""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/g_intestinalis.png')
 
-            # Redraw the screen during each pass through the loop.
-            self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
+class Gmuris(Protist):
+    """Class representing the Giardia muris protist."""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/g_muris.png')
 
-            # Make the most recently drawn screen visible.
-            pygame.display.flip()
-            self.clock.tick(60) # This function limits the frame rate of the game to 60 frames per second. This is important for ensuring that the game runs smoothly and consistently across different hardware configurations.
+class Spironucleus(Protist):
+    """Class representing the Spironucleus salmonicida protist."""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/s_salmonicida.png')
 
-if __name__ == '__main__':
-    # Make a game instance, and run the game.
-    protist = ProtistSurvival()
-    protist.run_game()
+class Trepomonas(Protist):
+    """Class representing the Trepomonas sp. protist."""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/trepomonas.png')
+
+class Hinflata(Protist):
+    """Class representing the Hexamita inflata protist."""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/h_inflata.png')
