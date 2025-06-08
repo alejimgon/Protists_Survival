@@ -51,6 +51,7 @@ class ProtistSurvival:
                     self.gintestinalis.moving_left = True 
                 elif event.key == pygame.K_RIGHT:
                     self.gintestinalis.moving_right = True 
+            elif event.type == pygame.KEYUP:
             # This block of code checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
                 if event.key == pygame.K_UP:
                     self.gintestinalis.moving_up = False
