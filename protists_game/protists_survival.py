@@ -12,9 +12,11 @@ class ProtistSurvival:
         pygame.init() # This function initializes the background settings that Pygame needs to work properly.
         self.clock = pygame.time.Clock() # This function creates a clock object that can be used to control the frame rate of the game.
         self.settings = Settings() # This line creates an instance of the Settings class, which contains all the settings for the game, such as screen size and background color.
-        
+
         # The screen is where all the game elements will be displayed.
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height)) # This function creates a window or screen for the game with the specified width and height.
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) # This function creates a window or screen for the game with the specified width and height.
+        self.settings.screen_width = self.screen.get_rect().width # This line sets the screen width to the width of the screen rectangle, which is the area where the game will be displayed.
+        self.settings.screen_height = self.screen.get_rect().height # This line sets the screen height to the height of the screen rectangle.
         # The object we assign to self.screen is a surface object. A surface in Pygame is a part of the screen where a game element can be displayed.
         pygame.display.set_caption("Protists Survival")
 
@@ -42,25 +44,36 @@ class ProtistSurvival:
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-            # This block of code checks if a key has been pressed down. If it has, it checks which key was pressed and sets the corresponding movement flag to True.
-                if event.key == pygame.K_UP:
-                    self.gintestinalis.moving_up = True 
-                elif event.key == pygame.K_DOWN:
-                    self.gintestinalis.moving_down = True 
-                elif event.key == pygame.K_LEFT:
-                    self.gintestinalis.moving_left = True 
-                elif event.key == pygame.K_RIGHT:
-                    self.gintestinalis.moving_right = True 
+                self._check_keydown_events(event) 
             elif event.type == pygame.KEYUP:
-            # This block of code checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
-                if event.key == pygame.K_UP:
-                    self.gintestinalis.moving_up = False
-                elif event.key == pygame.K_DOWN:
-                    self.gintestinalis.moving_down = False
-                elif event.key == pygame.K_LEFT:
-                    self.gintestinalis.moving_left = False
-                elif event.key == pygame.K_RIGHT:
-                    self.gintestinalis.moving_right = False
+                self._check_keyup_events(event)
+    
+    def _check_keydown_events(self, event):
+        """Respond to keypresses."""
+        # This function checks if a key has been pressed down. If it has, it checks which key was pressed and sets the corresponding movement flag to True.
+        if event.key == pygame.K_UP:
+            self.gintestinalis.moving_up = True 
+        elif event.key == pygame.K_DOWN:
+            self.gintestinalis.moving_down = True 
+        elif event.key == pygame.K_LEFT:
+            self.gintestinalis.moving_left = True 
+        elif event.key == pygame.K_RIGHT:
+            self.gintestinalis.moving_right = True
+        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:  # Quit the game when 'q' or 'ESC' is pressed.
+            sys.exit()
+
+
+    def _check_keyup_events(self, event):
+        """Respond to key releases."""
+        # This function checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
+        if event.key == pygame.K_UP:
+            self.gintestinalis.moving_up = False 
+        elif event.key == pygame.K_DOWN:
+            self.gintestinalis.moving_down = False 
+        elif event.key == pygame.K_LEFT:
+            self.gintestinalis.moving_left = False 
+        elif event.key == pygame.K_RIGHT:
+            self.gintestinalis.moving_right = False
                     
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
