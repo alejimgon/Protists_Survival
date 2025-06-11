@@ -46,6 +46,14 @@ class Gintestinalis(Protist):
     """Class representing the Giardia intestinalis protist."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/g_intestinalis.png')
+        # Load images for each direction.
+        self.images = {
+            'up': pygame.image.load('images/metamonada/g_intestinalis_move.png'),
+            'down': pygame.image.load('images/metamonada/g_intestinalis_move.png'),
+            'left': pygame.image.load('images/metamonada/g_intestinalis_move.png'),
+            'right': pygame.image.load('images/metamonada/g_intestinalis_move.png'),
+            'default': self.image
+        }
 
 class Gmuris(Protist):
     """Class representing the Giardia muris protist."""

@@ -21,11 +21,7 @@ class ProtistSurvival:
         pygame.display.set_caption("Protists Survival")
 
         self.gintestinalis = Gintestinalis(self) # This line creates an instance of the Gintestinalis class, which represents the Giardia intestinalis protist in the game.
-        self.gmuris = Gmuris(self) # This line creates an instance of the Gmuris class, which represents the Giardia muris protist in the game.
-        self.spironucleus = Spironucleus(self) # This line creates an instance of the Spironucleus class, which represents the Spironucleus salmonicida protist in the game.
-        self.trepomonas = Trepomonas(self) # This line creates an instance of the Trepomonas class, which represents the Trepomonas sp. protist in the game.
-        self.hinflata = Hinflata(self) # This line creates an instance of the Hinflata class, which represents the Hexamita inflata protist in the game.
-
+        
         # Set the background color of the screen.
         self.bg_color = self.settings.bg_color # This line sets the background color of the screen to the value specified in the Settings class.
     
@@ -52,13 +48,17 @@ class ProtistSurvival:
         """Respond to keypresses."""
         # This function checks if a key has been pressed down. If it has, it checks which key was pressed and sets the corresponding movement flag to True.
         if event.key == pygame.K_UP:
-            self.gintestinalis.moving_up = True 
+            self.gintestinalis.moving_up = True
+            self.gintestinalis.image = self.gintestinalis.images['up']  # Change image to the one for moving up 
         elif event.key == pygame.K_DOWN:
             self.gintestinalis.moving_down = True 
+            self.gintestinalis.image = self.gintestinalis.images['down']
         elif event.key == pygame.K_LEFT:
             self.gintestinalis.moving_left = True 
+            self.gintestinalis.image = self.gintestinalis.images['left']
         elif event.key == pygame.K_RIGHT:
             self.gintestinalis.moving_right = True
+            self.gintestinalis.image = self.gintestinalis.images['right']
         elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:  # Quit the game when 'q' or 'ESC' is pressed.
             sys.exit()
 
@@ -67,13 +67,25 @@ class ProtistSurvival:
         """Respond to key releases."""
         # This function checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
         if event.key == pygame.K_UP:
-            self.gintestinalis.moving_up = False 
+            self.gintestinalis.moving_up = False
         elif event.key == pygame.K_DOWN:
-            self.gintestinalis.moving_down = False 
+            self.gintestinalis.moving_down = False
         elif event.key == pygame.K_LEFT:
-            self.gintestinalis.moving_left = False 
+            self.gintestinalis.moving_left = False
         elif event.key == pygame.K_RIGHT:
             self.gintestinalis.moving_right = False
+
+        # Set image based on which keys are still pressed
+        if self.gintestinalis.moving_up:
+            self.gintestinalis.image = self.gintestinalis.images['up']
+        elif self.gintestinalis.moving_down:
+            self.gintestinalis.image = self.gintestinalis.images['down']
+        elif self.gintestinalis.moving_left:
+            self.gintestinalis.image = self.gintestinalis.images['left']
+        elif self.gintestinalis.moving_right:
+            self.gintestinalis.image = self.gintestinalis.images['right']
+        else:
+            self.gintestinalis.image = self.gintestinalis.images['default']
                     
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
