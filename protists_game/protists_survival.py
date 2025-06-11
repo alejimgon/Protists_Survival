@@ -47,45 +47,56 @@ class ProtistSurvival:
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         # This function checks if a key has been pressed down. If it has, it checks which key was pressed and sets the corresponding movement flag to True.
-        if event.key == pygame.K_UP:
-            self.gintestinalis.moving_up = True
-            self.gintestinalis.image = self.gintestinalis.images['up']  # Change image to the one for moving up 
-        elif event.key == pygame.K_DOWN:
-            self.gintestinalis.moving_down = True 
-            self.gintestinalis.image = self.gintestinalis.images['down']
-        elif event.key == pygame.K_LEFT:
-            self.gintestinalis.moving_left = True 
+        if event.key == pygame.K_LEFT:
+            self.gintestinalis.moving_left = True
             self.gintestinalis.image = self.gintestinalis.images['left']
+            self.gintestinalis.last_direction = 'left'
         elif event.key == pygame.K_RIGHT:
             self.gintestinalis.moving_right = True
             self.gintestinalis.image = self.gintestinalis.images['right']
-        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:  # Quit the game when 'q' or 'ESC' is pressed.
+            self.gintestinalis.last_direction = 'right'
+        elif event.key == pygame.K_UP:
+            self.gintestinalis.moving_up = True
+            # Do NOT change image here
+        elif event.key == pygame.K_DOWN:
+            self.gintestinalis.moving_down = True
+            # Do NOT change image here
+        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
             sys.exit()
 
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
         # This function checks if a key has been released. If it has, it checks which key was released and sets the corresponding movement flag to False.
-        if event.key == pygame.K_UP:
-            self.gintestinalis.moving_up = False
-        elif event.key == pygame.K_DOWN:
-            self.gintestinalis.moving_down = False
-        elif event.key == pygame.K_LEFT:
+        if event.key == pygame.K_LEFT:
             self.gintestinalis.moving_left = False
         elif event.key == pygame.K_RIGHT:
             self.gintestinalis.moving_right = False
+        elif event.key == pygame.K_UP:
+            self.gintestinalis.moving_up = False
+        elif event.key == pygame.K_DOWN:
+            self.gintestinalis.moving_down = False
 
-        # Set image based on which keys are still pressed
-        if self.gintestinalis.moving_up:
-            self.gintestinalis.image = self.gintestinalis.images['up']
-        elif self.gintestinalis.moving_down:
-            self.gintestinalis.image = self.gintestinalis.images['down']
-        elif self.gintestinalis.moving_left:
-            self.gintestinalis.image = self.gintestinalis.images['left']
-        elif self.gintestinalis.moving_right:
-            self.gintestinalis.image = self.gintestinalis.images['right']
-        else:
+        self._update_protist_image()
+
+    
+    def _update_protist_image(self):
+        """Update the protist's image based on movement."""
+        # Only set to default if NO movement keys are pressed
+        if not (self.gintestinalis.moving_left or self.gintestinalis.moving_right or
+                self.gintestinalis.moving_up or self.gintestinalis.moving_down):
             self.gintestinalis.image = self.gintestinalis.images['default']
+        else:
+            # If still moving left or right, keep that image
+            if self.gintestinalis.moving_left:
+                self.gintestinalis.image = self.gintestinalis.images['left']
+                self.gintestinalis.last_direction = 'left'
+            elif self.gintestinalis.moving_right:
+                self.gintestinalis.image = self.gintestinalis.images['right']
+                self.gintestinalis.last_direction = 'right'
+            else:
+                # If moving up/down only, keep last horizontal direction image
+                self.gintestinalis.image = self.gintestinalis.images[self.gintestinalis.last_direction]
                     
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
