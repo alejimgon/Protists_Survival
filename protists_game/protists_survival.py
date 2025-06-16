@@ -1,8 +1,11 @@
 import sys
 import pygame
+import random
 
 from settings import Settings
 from protists import *
+from energy import Energy
+from danger import Danger
 
 class ProtistSurvival:
     """Overall class to manage game assets and behavior."""
@@ -23,6 +26,11 @@ class ProtistSurvival:
         pygame.display.set_caption("Protists Survival")
 
         self.protist = Gintestinalis(self) # This line creates an instance of the selected protist class.
+
+        self.foods = pygame.sprite.Group()
+        self.danger = pygame.sprite.Group()
+        self.food_spawn_timer = 0  # Timer for spawning food
+        self.danger_spawn_timer = 0  # Timer for spawning dangers
         
         # Set the background color of the screen.
         self.bg_color = self.settings.bg_color
@@ -41,6 +49,44 @@ class ProtistSurvival:
         while True: 
             self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
             self.protist.update() # This line calls the update method of the Gintestinalis instance, which updates the position and state of the protist based on user input or game logic. This is important for making the protist move or change in response to player actions
+            
+            # Spawn food every 60 frames (about once per second at 60 FPS)
+            self.food_spawn_timer += 1
+            if self.food_spawn_timer > 60:
+                if random.random() < 0.5:  # 50% chance to spawn each second
+                    food = Energy(self.screen.get_rect())
+                    self.foods.add(food)
+                self.food_spawn_timer = 0
+            
+            # Spawn dangers every 60 frames (about once per seconds at 60 FPS)
+            self.danger_spawn_timer += 1
+            if self.danger_spawn_timer > 60:
+                if random.random() < 0.3: # 30% chance to spawn each second
+                    danger = Danger(self.screen.get_rect())
+                    self.danger.add(danger)
+                self.danger_spawn_timer = 0
+
+            # Update all food and danger positions
+            self.foods.update()
+            self.danger.update()
+
+            for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
+                # Handle food collection (increase score, energy, etc.)
+                pass
+
+            for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
+                # Handle danger collision (reduce health, game over, etc.)
+                pass
+
+            # Remove food and danger that has moved off the left edge
+            for food in list(self.foods):
+                if food.rect.right < 0:
+                    self.foods.remove(food)
+            
+            for danger in list(self.danger):
+                if danger.rect.right < 0:
+                    self.danger.remove(danger)
+            
             self._update_screen() # This function updates the screen with the current state of the game. It is called at the end of each iteration of the game loop to ensure that the screen is redrawn with the latest game elements.
             self.clock.tick(60) # This function limits the frame rate of the game to 60 frames per second. This is important for ensuring that the game runs smoothly and consistently across different hardware configurations.
 
@@ -122,6 +168,12 @@ class ProtistSurvival:
         # Redraw the screen during each pass through the loop.
         self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
         self.protist.blitme() # This line calls the blitme method of the selected protist instance, which draws the protist on the screen at its current position.
+        
+        for food in self.foods:
+            food.draw(self.screen)
+
+        for danger in self.danger:
+            danger.draw(self.screen)
         # Make the most recently drawn screen visible.
         pygame.display.flip()
     
