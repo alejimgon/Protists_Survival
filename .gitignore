@@ -1,3 +1,6 @@
+# Specific files and directories to ignore in the repository
+reference_papers/*
+
 # Pygame build process: config.py setup.py
 /Setup
 *.pyc
