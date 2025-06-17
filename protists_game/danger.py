@@ -13,7 +13,7 @@ class Danger(Sprite):
     ]
 
 
-    def __init__(self, screen_rect, speed=2):
+    def __init__(self, screen_rect, settings):
         super().__init__()
         # Choose a random danger image
         image_path = random.choice(self.DANGER_IMAGES)
@@ -27,7 +27,7 @@ class Danger(Sprite):
         # For pixel-perfect collision
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speed = speed
+        self.speed = settings.danger_speed  # Speed at which dangers move across the screen
 
     def update(self):
         """Move the danger left across the screen."""

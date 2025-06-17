@@ -10,3 +10,11 @@ class Settings:
 
         # Protist settings
         self.protist_speed = 2 # This is the speed at which the protists move across the screen. The value is in pixels per frame, meaning that each time the game updates, the protists will move by this number of pixels.
+
+        # Energy settings
+        self.energy_speed = 2  # Speed at which energy sources move across the screen.
+        self.energy_spawn_rate = 60
+
+        # Danger settings
+        self.danger_speed = 2  # Speed at which dangers move across the screen.
+        self.danger_spawn_rate = 60

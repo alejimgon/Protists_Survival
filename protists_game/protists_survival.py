@@ -52,17 +52,17 @@ class ProtistSurvival:
             
             # Spawn food every 60 frames (about once per second at 60 FPS)
             self.food_spawn_timer += 1
-            if self.food_spawn_timer > 60:
+            if self.food_spawn_timer > self.settings.energy_spawn_rate:
                 if random.random() < 0.5:  # 50% chance to spawn each second
-                    food = Energy(self.screen.get_rect())
+                    food = Energy(self.screen.get_rect(), self.settings)
                     self.foods.add(food)
                 self.food_spawn_timer = 0
             
             # Spawn dangers every 60 frames (about once per seconds at 60 FPS)
             self.danger_spawn_timer += 1
-            if self.danger_spawn_timer > 60:
+            if self.danger_spawn_timer > self.settings.danger_spawn_rate:
                 if random.random() < 0.3: # 30% chance to spawn each second
-                    danger = Danger(self.screen.get_rect())
+                    danger = Danger(self.screen.get_rect(), self.settings)
                     self.danger.add(danger)
                 self.danger_spawn_timer = 0
 

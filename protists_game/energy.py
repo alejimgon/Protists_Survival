@@ -12,7 +12,7 @@ class Energy(Sprite):
         'images/food/arginine.png'
     ]
 
-    def __init__(self, screen_rect, speed=2):
+    def __init__(self, screen_rect, settings):
         super().__init__()
         # Choose a random food image
         image_path = random.choice(self.FOOD_IMAGES)
@@ -26,7 +26,7 @@ class Energy(Sprite):
         # For pixel-perfect collision
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speed = speed
+        self.speed = settings.energy_speed  
 
     def update(self):
         """Move the food left across the screen."""
