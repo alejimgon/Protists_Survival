@@ -13,8 +13,10 @@ class Settings:
 
         # Energy settings
         self.energy_speed = 2  # Speed at which energy sources move across the screen.
-        self.energy_spawn_rate = 60
+        self.energy_spawn_rate = 60 # How often energy sources spawn (in frames).
+        self.energy_chance = 0.5 # Probability of spawning energy when the spawn timer reaches zero.
 
         # Danger settings
         self.danger_speed = 2  # Speed at which dangers move across the screen.
-        self.danger_spawn_rate = 60
+        self.danger_spawn_rate = 60 # How often dangers spawn (in frames).
+        self.danger_chance = 0.3 # Probability of spawning a danger when the spawn timer reaches zero.
