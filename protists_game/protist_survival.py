@@ -2,7 +2,10 @@ import sys
 import pygame
 import random
 
+from time import sleep
 from settings import Settings
+from game_stats import GameStats
+from scoreboard import Scoreboard
 from protists import *
 from energy import Energy
 from danger import Danger
@@ -25,7 +28,13 @@ class ProtistSurvival:
         # Set the title of the game window.
         pygame.display.set_caption("Protists Survival")
 
+        # Create an instance of the Protist class.
         self.protist = Gintestinalis(self) # This line creates an instance of the selected protist class.
+
+        # Create an instance to store game statistics and create a scoreboard.
+        self.stats = GameStats(self, self.protist)
+        self.sb = Scoreboard(self, self.protist)
+        
 
         self.foods = pygame.sprite.Group()
         self.danger = pygame.sprite.Group()
@@ -48,7 +57,7 @@ class ProtistSurvival:
         """Start the main loop for the game."""
         while True: 
             self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
-            self.protist.update() # This line calls the update method of the Gintestinalis instance, which updates the position and state of the protist based on user input or game logic. This is important for making the protist move or change in response to player actions
+            self.protist.update() # This line calls the update method of the selected protist instance.
             
             # Spawn food and energy
             self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
@@ -59,12 +68,34 @@ class ProtistSurvival:
             self.danger.update()
 
             for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle food collection (increase score, energy, etc.)
-                pass
+                # Handle food collection (increase score)
+                self.stats.score += self.settings.energy_points
+                self.sb.prep_score() 
 
             for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle danger collision (reduce health, game over, etc.)
-                pass
+                # Handle danger collision (decrease danger defence)
+                self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
+                if self.stats.danger_defence <= 0:
+                    if self.stats.lives_left > 0:
+                        self.stats.lives_left -= 1
+                        # Show default image and update display
+                        self.protist.set_image(self.protist.images['default'])
+                        self.protist.last_direction = 'default'
+                        self.sb.prep_score()
+                        self._update_screen()
+                        pygame.display.flip()
+                        sleep(1)
+                        # Now reset protist and game state
+                        self.stats.danger_defence = self.protist.danger_defence_max
+                        self.foods.empty()
+                        self.danger.empty()
+                        self.protist.rect.midleft = self.screen.get_rect().midleft
+                        self.protist.x = float(self.protist.rect.x)
+                        self.protist.y = float(self.protist.rect.y)
+                    else:
+                        self.stats.game_active = False
+                        self.sb.prep_score()
+                    
 
             # Remove food and danger that has moved off the left edge
             self._remove_offscreen_entities(self.foods)
@@ -166,8 +197,20 @@ class ProtistSurvival:
         """Update images on the screen, and flip to the new screen."""
         # Redraw the screen during each pass through the loop.
         self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
-        self.protist.blitme() # This line calls the blitme method of the selected protist instance, which draws the protist on the screen at its current position.
-        
+       
+        # Draw HUD background and border
+        hud_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.hud_height)
+        pygame.draw.rect(self.screen, self.settings.hud_bg_color, hud_rect)
+        pygame.draw.line(
+            self.screen,
+            (0, 0, 0),
+            (0, self.settings.hud_height - 1),
+            (self.settings.screen_width, self.settings.hud_height - 1),
+            3
+        )
+        # Draw the protist, scoreboard, foods, and dangers.
+        self.protist.blitme() 
+        self.sb.show_score()
         self._draw_entities(self.foods)
         self._draw_entities(self.danger)
         
