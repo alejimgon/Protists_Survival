@@ -144,6 +144,15 @@ class ProtistSurvival:
             if not self.protist.moving_left and not self.protist.moving_right:
                 self.protist.last_direction = 'right'
             self.protist.set_image(self.protist.images[self.protist.last_direction])
+        elif event.key == pygame.K_SPACE:
+            # Danger defence replenish logic
+            replenish_cost = 100
+            replenish_amount = self.settings.protist_danger_replenish_rate
+            max_defence = self.protist.danger_defence_max
+            if self.stats.score >= replenish_cost and self.stats.danger_defence < max_defence:
+                self.stats.score -= replenish_cost
+                self.stats.danger_defence = min(self.stats.danger_defence + replenish_amount, max_defence)
+                self.sb.prep_score()
         elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
             sys.exit()
 

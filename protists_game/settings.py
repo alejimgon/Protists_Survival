@@ -13,7 +13,7 @@ class Settings:
         # Protist settings
         self.protist_lives = 3
         self.protist_danger_depletion_rate = 10
-        self.protist_danger_replenish_rate = 10
+        self.protist_danger_replenish_rate = 5
 
         # Energy settings
         self.energy_spawn_rate = 60
