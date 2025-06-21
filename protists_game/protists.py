@@ -50,8 +50,8 @@ class Protist:
             self.x += self.settings.protist_speed
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.protist_speed
-        if self.moving_up and self.rect.top > 0:
-            self.y -= self.settings.protist_speed
+        if self.moving_up:
+            self.y = max(self.y - self.settings.protist_speed, self.settings.hud_height + 10)  # Prevent going above the HUD height.
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.y += self.settings.protist_speed
 
@@ -101,6 +101,7 @@ class Gintestinalis(Protist):
             'default': self.image
         }
         self.last_direction = 'default'  # Track the last direction for image updates.
+        self.danger_defence_max = 75
 
 
 class Gmuris(Protist):
