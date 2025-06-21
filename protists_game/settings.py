@@ -4,19 +4,45 @@ class Settings:
     def __init__(self):
         """Initialize the game's settings."""
         # Screen settings
-        self.screen_width = 1200 # This is the width of the game screen in pixels.
-        self.screen_height = 775 # This is the height of the game screen in pixels.
-        self.bg_color = (230, 230, 230)  # This is a tuple that represents the RGB color of the background.
+        self.screen_width = 1200 
+        self.screen_height = 775
+        self.bg_color = (230, 230, 230)
+        self.hud_height = 100
+        self.hud_bg_color = (200, 220, 255)
 
         # Protist settings
-        self.protist_speed = 2 # This is the speed at which the protists move across the screen. The value is in pixels per frame, meaning that each time the game updates, the protists will move by this number of pixels.
+        self.protist_lives = 3
+        self.protist_danger_depletion_rate = 10
+        self.protist_danger_replenish_rate = 10
 
         # Energy settings
-        self.energy_speed = 2  # Speed at which energy sources move across the screen.
-        self.energy_spawn_rate = 60 # How often energy sources spawn (in frames).
-        self.energy_chance = 0.5 # Probability of spawning energy when the spawn timer reaches zero.
+        self.energy_spawn_rate = 60
+        self.energy_chance = 0.5 
 
-        # Danger settings
-        self.danger_speed = 2  # Speed at which dangers move across the screen.
-        self.danger_spawn_rate = 60 # How often dangers spawn (in frames).
-        self.danger_chance = 0.3 # Probability of spawning a danger when the spawn timer reaches zero.
+        # Danger settings 
+        self.danger_spawn_rate = 60 
+        self.danger_chance = 0.3
+
+        # How quickly the game and the protist speed up
+        self.speedup_scale = 1.1
+        self.protist_speedup_scale = 1.05
+
+        self.initialize_dynamic_settings()
+
+    def initialize_dynamic_settings(self):
+        """Initialize settings that change throughout the game."""
+        self.protist_speed = 2.0
+        self.energy_speed = 1.5
+        self.danger_speed = 1.5
+
+         # Scoring settings
+        self.energy_points = 50
+
+
+    def increase_speed(self):
+        """Increase speed settings."""
+        self.protist_speed *= self.protist_speedup_scale
+        self.energy_speed *= self.speedup_scale
+        self.danger_speed *= self.speedup_scale
+
+       

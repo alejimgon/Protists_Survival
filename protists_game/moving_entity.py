@@ -12,14 +12,30 @@ class MovingEntity(Sprite):
         super().__init__()
         image_path = random.choice(self.IMAGE_LIST)
         self.image = pygame.image.load(image_path).convert_alpha()
+        self.settings = settings
+        self.screen_rect = screen_rect
         self.rect = self.image.get_rect()
         self.rect.right = screen_rect.right
-        self.rect.y = random.randint(0, screen_rect.height - self.rect.height)
+        # Only spawn below the HUD area
+        min_y = settings.hud_height
+        max_y = screen_rect.height - self.rect.height
+        self.rect.y = random.randint(min_y, max_y)
         self.mask = pygame.mask.from_surface(self.image)
         self.speed = getattr(settings, speed_attr)
 
+
     def update(self):
         self.rect.x -= self.speed
+
+        # Prevent entity from moving into the HUD area
+        if hasattr(self, 'settings'):
+            min_y = self.settings.hud_height
+            max_y = self.screen_rect.height - self.rect.height
+            if self.rect.y < min_y:
+                self.rect.y = min_y
+            elif self.rect.y > max_y:
+                self.rect.y = max_y
+
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
