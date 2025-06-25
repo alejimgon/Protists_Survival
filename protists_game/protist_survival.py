@@ -73,6 +73,12 @@ class ProtistSurvival:
                 self.sb.prep_score()
                 self.sb.check_high_score()
 
+                # Level up every 10,000 points
+                if self.stats.score // 10000 + 1 > self.stats.level:
+                    self.stats.level = self.stats.score // 10000 + 1
+                    self.settings.increase_speed()
+                    self.sb.prep_level()
+
             for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
                 # Handle danger collision (decrease danger defence)
                 self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
@@ -155,6 +161,7 @@ class ProtistSurvival:
                 self.stats.danger_defence = min(self.stats.danger_defence + replenish_amount, max_defence)
                 self.sb.prep_score()
         elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+            self.stats.save_high_score()
             sys.exit()
 
 

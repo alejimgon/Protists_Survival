@@ -17,6 +17,7 @@ class Scoreboard:
         self.font = pygame.font.SysFont(None, 48)
         self.prep_score()
         self.prep_high_score()
+        self.prep_level()
 
     def prep_score(self):
         """Turn the score into a rendered image."""
@@ -44,14 +45,28 @@ class Scoreboard:
         """Check if there's a new high score."""
         if self.stats.score > self.stats.high_score:
             self.stats.high_score = self.stats.score
+            self.stats.save_high_score()
             self.prep_high_score()
 
     def show_score(self):
-        """Draw the score and lives to the screen."""
+        """Draw the score, level and lives to the screen."""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
+        self.screen.blit(self.level_image, self.level_rect)
+        
+        # Draw the protist lives and danger defence bar.
         self.show_lives()
         self.show_danger_defence()
+
+    def prep_level(self):
+        """Turn the level into a rendered image."""
+        level_str = f"Level: {self.stats.level}"
+        self.level_image = self.font.render(level_str, True, self.text_color, self.settings.hud_bg_color)
+
+        # Display the level bellow the score.
+        self.level_rect = self.level_image.get_rect()
+        self.level_rect.right = self.score_rect.right
+        self.level_rect.top = self.score_rect.bottom + 10  # Add some space below
 
     def show_lives(self):
         """Draw protist icons for remaining lives in the HUD."""

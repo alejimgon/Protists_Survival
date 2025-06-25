@@ -1,5 +1,6 @@
 # Specific files and directories to ignore in the repository
 reference_papers/*
+protists_game/high_score.txt
 
 # Pygame build process: config.py setup.py
 /Setup
