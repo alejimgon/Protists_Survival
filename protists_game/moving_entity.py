@@ -22,19 +22,25 @@ class MovingEntity(Sprite):
         self.rect.y = random.randint(min_y, max_y)
         self.mask = pygame.mask.from_surface(self.image)
         self.speed = getattr(settings, speed_attr)
+        self.vertical_speed = random.choice([-1, 1]) * random.uniform(1, 2) # Random initial direction and speed
 
 
     def update(self):
         self.rect.x -= self.speed
 
-        # Prevent entity from moving into the HUD area
-        if hasattr(self, 'settings'):
-            min_y = self.settings.hud_height
-            max_y = self.screen_rect.height - self.rect.height
-            if self.rect.y < min_y:
-                self.rect.y = min_y
-            elif self.rect.y > max_y:
-                self.rect.y = max_y
+        # Zig-zag vertical movement
+        self.rect.y += self.vertical_speed
+
+        # Prevent entity from moving into the HUD area or below the screen
+        min_y = self.settings.hud_height
+        max_y = self.screen_rect.height - self.rect.height
+
+        if self.rect.y < min_y:
+            self.rect.y = min_y
+            self.vertical_speed *= -1  # Reverse direction
+        elif self.rect.y > max_y:
+            self.rect.y = max_y
+            self.vertical_speed *= -1  # Reverse direction
 
 
     def draw(self, screen):
