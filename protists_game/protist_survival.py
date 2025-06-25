@@ -70,7 +70,8 @@ class ProtistSurvival:
             for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
                 # Handle food collection (increase score)
                 self.stats.score += self.settings.energy_points
-                self.sb.prep_score() 
+                self.sb.prep_score()
+                self.sb.check_high_score()
 
             for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
                 # Handle danger collision (decrease danger defence)

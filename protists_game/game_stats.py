@@ -6,6 +6,7 @@ class GameStats:
         self.settings = ps_game.settings
         self.protist = protist
         self.danger_defence = protist.danger_defence_max
+        self.high_score = 0
         self.reset_stats()
     
     def reset_stats(self):
