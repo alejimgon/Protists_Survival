@@ -108,21 +108,37 @@ class Gmuris(Protist):
     """Class representing the Giardia muris protist."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/g_muris.png')
+        # Load images for each direction.
+        self.images = {}
+        self.last_direction = 'default'
+        self.danger_defence_max = 60
 
 
 class Spironucleus(Protist):
     """Class representing the Spironucleus salmonicida protist."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/s_salmonicida.png')
+        # Load images for each direction.
+        self.images = {}
+        self.last_direction = 'default'
+        self.danger_defence_max = 80
 
 
 class Trepomonas(Protist):
     """Class representing the Trepomonas sp. protist."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/trepomonas.png')
+        # Load images for each direction.
+        self.images = {}
+        self.last_direction = 'default'
+        self.danger_defence_max = 85
 
 
 class Hinflata(Protist):
     """Class representing the Hexamita inflata protist."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/h_inflata.png')
+        # Load images for each direction.
+        self.images = {}
+        self.last_direction = 'default'
+        self.danger_defence_max = 90
