@@ -8,7 +8,7 @@ class Settings:
         self.screen_height = 775
         self.bg_color = (230, 230, 230)
         self.hud_height = 100
-        self.hud_bg_color = (200, 220, 255)
+        self.hud_bg_color = (0, 158, 161)
 
         # Protist settings
         self.protist_lives = 3
