@@ -35,7 +35,6 @@ class ProtistSurvival:
         self.stats = GameStats(self, self.protist)
         self.sb = Scoreboard(self, self.protist)
         
-
         self.foods = pygame.sprite.Group()
         self.danger = pygame.sprite.Group()
         self.food_spawn_timer = 0  # Timer for spawning food
@@ -52,57 +51,61 @@ class ProtistSurvival:
             pygame.K_DOWN: 'moving_down'
         }
 
+        self.game_active = True  # Flag to control the game loop
     
     def run_game(self):
         """Start the main loop for the game."""
-        while True: 
-            self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
-            self.protist.update() # This line calls the update method of the selected protist instance.
+        while True:
+            if self.game_active: 
+                self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
+                self.protist.update() # This line calls the update method of the selected protist instance.
+                
+                # Spawn food and energy
+                self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
+                self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
             
-            # Spawn food and energy
-            self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
-            self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
-        
-            # Update all food and danger positions
-            self.foods.update()
-            self.danger.update()
+                # Update all food and danger positions
+                self.foods.update()
+                self.danger.update()
 
-            for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle food collection (increase score)
-                self.stats.score += self.settings.energy_points
-                self.sb.prep_score()
-                self.sb.check_high_score()
+                for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
+                    # Handle food collection (increase score)
+                    self.stats.score += self.settings.energy_points
+                    self.sb.prep_score()
+                    self.sb.check_high_score()
 
-                # Level up every 10,000 points
-                if self.stats.score // 10000 + 1 > self.stats.level:
-                    self.stats.level = self.stats.score // 10000 + 1
-                    self.settings.increase_speed()
-                    self.sb.prep_level()
+                    # Level up every 10,000 points
+                    if self.stats.score // 10000 + 1 > self.stats.level:
+                        self.stats.level = self.stats.score // 10000 + 1
+                        self.settings.increase_speed()
+                        self.sb.prep_level()
 
-            for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle danger collision (decrease danger defence)
-                self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
-                if self.stats.danger_defence <= 0:
-                    if self.stats.lives_left > 0:
+                for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
+                    # Handle danger collision (decrease danger defence)
+                    self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
+                    if self.stats.danger_defence <= 0:
                         self.stats.lives_left -= 1
-                        # Show default image and update display
-                        self.protist.set_image(self.protist.images['default'])
-                        self.protist.last_direction = 'default'
-                        self.sb.prep_score()
-                        self._update_screen()
-                        pygame.display.flip()
-                        sleep(1)
-                        # Now reset protist and game state
-                        self.stats.danger_defence = self.protist.danger_defence_max
-                        self.foods.empty()
-                        self.danger.empty()
-                        self.protist.rect.midleft = self.screen.get_rect().midleft
-                        self.protist.x = float(self.protist.rect.x)
-                        self.protist.y = float(self.protist.rect.y)
-                    else:
-                        self.stats.game_active = False
-                        self.sb.prep_score()
-                    
+                        if self.stats.lives_left > 0:
+                            # Show default image and update display
+                            self.protist.set_image(self.protist.images['default'])
+                            self.protist.last_direction = 'default'
+                            self.sb.prep_score()
+                            self._update_screen()
+                            pygame.display.flip()
+                            sleep(1)
+                            # Now reset protist and game state
+                            self.stats.danger_defence = self.protist.danger_defence_max
+                            self.foods.empty()
+                            self.danger.empty()
+                            self.protist.rect.midleft = self.screen.get_rect().midleft
+                            self.protist.x = float(self.protist.rect.x)
+                            self.protist.y = float(self.protist.rect.y)
+                        else:
+                            self.game_active = False
+                            self.sb.prep_score()
+                            self.stats.save_high_score()
+                            sys.exit()
+                        
 
             # Remove food and danger that has moved off the left edge
             self._remove_offscreen_entities(self.foods)
