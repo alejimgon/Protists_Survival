@@ -16,8 +16,9 @@ class ProtistSurvival:
 
     def __init__(self):
         """Initialize the game, and create game resources."""
-        pygame.init() # This function initializes the background settings that Pygame needs to work properly.
-        self.clock = pygame.time.Clock() # This function creates a clock object that can be used to control the frame rate of the game.
+        self.state = "INTRO" # Possible states: INTRO, SELECTION, GAMEPLAY, GAME_OVER
+        pygame.init()
+        self.clock = pygame.time.Clock()
         self.settings = Settings()
 
         # The screen is where all the game elements will be displayed.
@@ -56,64 +57,166 @@ class ProtistSurvival:
     def run_game(self):
         """Start the main loop for the game."""
         while True:
-            if self.game_active: 
-                self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
-                self.protist.update() # This line calls the update method of the selected protist instance.
-                
-                # Spawn food and energy
-                self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
-                self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
+            if self.state == "INTRO":
+                self.run_intro()
+                self.state = "SELECTION"
+            elif self.state == "SELECTION":
+                self.run_selection()
+                self.state = "GAMEPLAY"
+            elif self.state == "GAMEPLAY":
+                self.run_gameplay()
+            elif self.state == "GAME_OVER":
+                self.run_game_over()
+
+            self.clock.tick(60)
             
-                # Update all food and danger positions
-                self.foods.update()
-                self.danger.update()
+             
+    def run_intro(self):
+        """Display the introduction screen."""
+        # Load the intro image
+        intro_image = pygame.image.load('images/screen_images/intro_screen.png')
+        screen_rect = self.screen.get_rect()
 
-                for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
-                    # Handle food collection (increase score)
-                    self.stats.score += self.settings.energy_points
-                    self.sb.prep_score()
-                    self.sb.check_high_score()
+        # Scale the image to fit the screen, preserving aspect ratio
+        img_rect = intro_image.get_rect()
+        scale_w = screen_rect.width / img_rect.width
+        scale_h = screen_rect.height / img_rect.height
+        scale = min(scale_w, scale_h)
+        new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
+        intro_image = pygame.transform.smoothscale(intro_image, new_size)
+        intro_rect = intro_image.get_rect(center=screen_rect.center)
 
-                    # Level up every 10,000 points
-                    if self.stats.score // 10000 + 1 > self.stats.level:
-                        self.stats.level = self.stats.score // 10000 + 1
-                        self.settings.increase_speed()
-                        self.sb.prep_level()
+        self.screen.fill(self.settings.intro_bg_color)
+        self.screen.blit(intro_image, intro_rect)
+        pygame.display.flip()
 
-                for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
-                    # Handle danger collision (decrease danger defence)
-                    self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
-                    if self.stats.danger_defence <= 0:
-                        self.stats.lives_left -= 1
-                        if self.stats.lives_left > 0:
-                            # Show default image and update display
-                            self.protist.set_image(self.protist.images['default'])
-                            self.protist.last_direction = 'default'
-                            self.sb.prep_score()
-                            self._update_screen()
-                            pygame.display.flip()
-                            sleep(1)
-                            # Now reset protist and game state
-                            self.stats.danger_defence = self.protist.danger_defence_max
-                            self.foods.empty()
-                            self.danger.empty()
-                            self.protist.rect.midleft = self.screen.get_rect().midleft
-                            self.protist.x = float(self.protist.rect.x)
-                            self.protist.y = float(self.protist.rect.y)
+        # Wait for user input to proceed to protist selection
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        waiting = False
+                    elif event.key == pygame.K_ESCAPE:
+                        sys.exit()
+
+    def run_selection(self):
+        """Display the protist selection screen."""
+        # Load and display the selection image
+        selection_image = pygame.image.load('images/screen_images/selection_screen.png')
+        screen_rect = self.screen.get_rect()
+        
+        # Scale the image to fit the screen, preserving aspect ratio
+        img_rect = selection_image.get_rect()
+        scale_w = screen_rect.width / img_rect.width
+        scale_h = screen_rect.height / img_rect.height
+        scale = min(scale_w, scale_h)
+        new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
+        selection_image = pygame.transform.smoothscale(selection_image, new_size)
+        selection_image = selection_image.get_rect(center=screen_rect.center)
+
+        # Wait for user input to select a protist
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                        waiting = False
+                    elif event.key == pygame.K_ESCAPE:
+                        sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    # Check if the user clicked on a protist image
+                    mouse_pos = pygame.mouse.get_pos()
+                    if selection_rect.collidepoint(mouse_pos):
+                        # Determine which protist was clicked based on mouse position
+                        if mouse_pos[0] < self.settings.screen_width // 2:
+                            self.protist = Gintestinalis(self)
                         else:
-                            self.game_active = False
-                            self.sb.prep_score()
-                            self.stats.save_high_score()
-                            sys.exit()
-                        
+                            self.protist = Pfalciparum(self)
+                        waiting = False  # Exit the selection loop
+
+
+    def run_gameplay(self):
+        """Start the main loop for the game."""
+        if self.game_active: 
+            self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
+            self.protist.update() # This line calls the update method of the selected protist instance.
+                
+            # Spawn food and energy
+            self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
+            self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
+            
+            # Update all food and danger positions
+            self.foods.update()
+            self.danger.update()
+
+            for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
+                # Handle food collection (increase score)
+                self.stats.score += self.settings.energy_points
+                self.sb.prep_score()
+                self.sb.check_high_score()
+
+                # Level up every 10,000 points
+                if self.stats.score // 2000 + 1 > self.stats.level:
+                    self.stats.level = self.stats.score // 2000 + 1
+                    self.settings.increase_speed()
+                    self.sb.prep_level()
+
+            for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
+                # Handle danger collision (decrease danger defence)
+                self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
+                if self.stats.danger_defence <= 0:
+                    self.stats.lives_left -= 1
+                    if self.stats.lives_left > 0:
+                        # Show default image and update display
+                        self.protist.set_image(self.protist.images['default'])
+                        self.protist.last_direction = 'default'
+                        self.sb.prep_score()
+                        self._update_screen()
+                        pygame.display.flip()
+                        sleep(1)
+                        # Now reset protist and game state
+                        self.stats.danger_defence = self.protist.danger_defence_max
+                        self.foods.empty()
+                        self.danger.empty()
+                        self.protist.rect.midleft = self.screen.get_rect().midleft
+                        self.protist.x = float(self.protist.rect.x)
+                        self.protist.y = float(self.protist.rect.y)
+                    else:
+                        # Game over logic
+                        self.stats.save_high_score()
+                        self.state = "GAME_OVER"
 
             # Remove food and danger that has moved off the left edge
             self._remove_offscreen_entities(self.foods)
             self._remove_offscreen_entities(self.danger)
+            self._update_screen()
 
-            self._update_screen() # This function updates the screen with the current state of the game. It is called at the end of each iteration of the game loop to ensure that the screen is redrawn with the latest game elements.
-            self.clock.tick(60) # This function limits the frame rate of the game to 60 frames per second. This is important for ensuring that the game runs smoothly and consistently across different hardware configurations.
 
+    def run_game_over(self):
+        """Display the game over screen."""
+        # Load and display the game over image
+        game_over_image = pygame.image.load('images/screen_images/game_over_screen.png')
+        game_over_rect = game_over_image.get_rect(center=self.screen.get_rect().center)
+        
+        self.screen.fill(self.bg_color)
+        self.screen.blit(game_over_image, game_over_rect)
+        pygame.display.flip()
+
+        # Wait for user input to restart or quit
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                        waiting = False
+                        self.state = "SELECTION"
 
     def _check_events(self):
         """Respond to keypresses and mouse events."""

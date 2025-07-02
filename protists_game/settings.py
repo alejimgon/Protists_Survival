@@ -9,6 +9,7 @@ class Settings:
         self.bg_color = (230, 230, 230)
         self.hud_height = 100
         self.hud_bg_color = (0, 158, 161)
+        self.intro_bg_color = (0, 158, 161)
 
         # Protist settings
         self.protist_lives = 3
