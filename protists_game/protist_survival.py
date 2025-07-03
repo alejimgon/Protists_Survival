@@ -9,6 +9,7 @@ from scoreboard import Scoreboard
 from protists import *
 from energy import Energy
 from danger import Danger
+from group_polygons import GROUP_POLYGONS
 
 class ProtistSurvival:
     """Overall class to manage game assets and behavior."""
@@ -75,16 +76,11 @@ class ProtistSurvival:
         """Display the introduction screen."""
         # Load the intro image
         intro_image = pygame.image.load('images/screen_images/intro_screen.png')
-        screen_rect = self.screen.get_rect()
+        intro_rect = self.screen.get_rect()
 
         # Scale the image to fit the screen, preserving aspect ratio
-        img_rect = intro_image.get_rect()
-        scale_w = screen_rect.width / img_rect.width
-        scale_h = screen_rect.height / img_rect.height
-        scale = min(scale_w, scale_h)
-        new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
-        intro_image = pygame.transform.smoothscale(intro_image, new_size)
-        intro_rect = intro_image.get_rect(center=screen_rect.center)
+        intro_image = self._scale_image(intro_image, intro_rect)
+        intro_rect = intro_image.get_rect(center=intro_rect.center)
 
         self.screen.fill(self.settings.intro_bg_color)
         self.screen.blit(intro_image, intro_rect)
@@ -104,40 +100,44 @@ class ProtistSurvival:
 
     def run_selection(self):
         """Display the protist selection screen."""
-        # Load and display the selection image
         selection_image = pygame.image.load('images/screen_images/selection_screen.png')
-        screen_rect = self.screen.get_rect()
-        
-        # Scale the image to fit the screen, preserving aspect ratio
-        img_rect = selection_image.get_rect()
-        scale_w = screen_rect.width / img_rect.width
-        scale_h = screen_rect.height / img_rect.height
-        scale = min(scale_w, scale_h)
-        new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
-        selection_image = pygame.transform.smoothscale(selection_image, new_size)
-        selection_image = selection_image.get_rect(center=screen_rect.center)
+        selection_rect = self.screen.get_rect()
+        selection_image = self._scale_image(selection_image, selection_rect)
+        selection_rect = selection_image.get_rect(center=selection_rect.center)
 
-        # Wait for user input to select a protist
         waiting = True
         while waiting:
+            mouse_pos = pygame.mouse.get_pos()
+            highlighted_group = None
+            for group_name, polygon in GROUP_POLYGONS.items():
+                if self.point_in_polygon(mouse_pos, polygon):
+                    highlighted_group = group_name
+                    break
+
+            self.screen.fill(self.settings.intro_bg_color)
+            self.screen.blit(selection_image, selection_rect)
+            if highlighted_group:
+                pygame.draw.polygon(
+                    self.screen,
+                    (255, 255, 0),  # Yellow
+                    GROUP_POLYGONS[highlighted_group],
+                    5
+                )
+            pygame.display.flip()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
-                    if event.key in (pygame.K_RETURN, pygame.K_SPACE):
-                        waiting = False
-                    elif event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_ESCAPE:
                         sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    # Check if the user clicked on a protist image
-                    mouse_pos = pygame.mouse.get_pos()
-                    if selection_rect.collidepoint(mouse_pos):
-                        # Determine which protist was clicked based on mouse position
-                        if mouse_pos[0] < self.settings.screen_width // 2:
-                            self.protist = Gintestinalis(self)
-                        else:
-                            self.protist = Pfalciparum(self)
-                        waiting = False  # Exit the selection loop
+                    for group_name, polygon in GROUP_POLYGONS.items():
+                        if self.point_in_polygon(mouse_pos, polygon):
+                            self.selected_group = group_name
+                            print(f"Selected group: {group_name}")
+                            waiting = False
+                            break
 
 
     def run_gameplay(self):
@@ -217,6 +217,35 @@ class ProtistSurvival:
                     if event.key in (pygame.K_RETURN, pygame.K_SPACE):
                         waiting = False
                         self.state = "SELECTION"
+
+    
+    def point_in_polygon(self, point, polygon):
+        x, y = point
+        inside = False
+        n = len(polygon)
+        p1x, p1y = polygon[0]
+        for i in range(n+1):
+            p2x, p2y = polygon[i % n]
+            if y > min(p1y, p2y):
+                if y <= max(p1y, p2y):
+                    if x <= max(p1x, p2x):
+                        if p1y != p2y:
+                            xinters = (y-p1y)*(p2x-p1x)/(p2y-p1y)+p1x
+                        if p1x == p2x or x <= xinters:
+                            inside = not inside
+            p1x, p1y = p2x, p2y
+        return inside
+
+    
+    def _scale_image(self, image, target_rect):
+        """Scale an image to fit within target_rect, preserving aspect ratio."""
+        img_rect = image.get_rect()
+        scale_w = target_rect.width / img_rect.width
+        scale_h = target_rect.height / img_rect.height
+        scale = min(scale_w, scale_h)
+        new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
+        return pygame.transform.smoothscale(image, new_size)
+    
 
     def _check_events(self):
         """Respond to keypresses and mouse events."""
