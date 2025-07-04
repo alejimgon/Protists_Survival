@@ -50,12 +50,15 @@ class ProtistSurvival:
     def run_game(self):
         while True:
             if self.state == "INTRO":
+                pygame.mouse.set_visible(False)
                 self.run_intro()
             elif self.state == "SELECTION":
+                pygame.mouse.set_visible(True)
                 self.run_selection()
             elif self.state == "PROTIST_SELECTION":
                 self.run_protist_selection()
             elif self.state == "GAMEPLAY":
+                pygame.mouse.set_visible(False)
                 self.run_gameplay()
             elif self.state == "GAME_OVER":
                 self.run_game_over()
@@ -110,7 +113,7 @@ class ProtistSurvival:
             if highlighted_group:
                 pygame.draw.polygon(
                     self.screen,
-                    (255, 255, 0),  # Yellow
+                    (1, 1, 1),  
                     EUK_GROUP_SELECTION_POLYGONS[highlighted_group],
                     5
                 )
@@ -176,17 +179,11 @@ class ProtistSurvival:
             if highlighted_protist:
                 pygame.draw.polygon(
                     self.screen,
-                    (255, 255, 0),
+                    (255, 0, 0),
                     protist_polygons[highlighted_protist],
                     5
                 )
-            if highlighted_back:
-                pygame.draw.polygon(
-                    self.screen,
-                    (255, 0, 0),  # Red highlight for BACK
-                    button_polygons["back"],
-                    5
-                )
+            
             pygame.display.flip()
 
             for event in pygame.event.get():
@@ -326,7 +323,7 @@ class ProtistSurvival:
         self.screen.fill(self.settings.intro_bg_color)
         font = pygame.font.SysFont(None, 48)
         for i, msg in enumerate(lines):
-            text = font.render(msg, True, (255, 0, 0))
+            text = font.render(msg, True, (46, 49, 146))
             rect = text.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + i*60))
             self.screen.blit(text, rect)
         pygame.display.flip()
