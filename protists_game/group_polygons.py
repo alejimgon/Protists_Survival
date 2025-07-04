@@ -1,68 +1,94 @@
-TSAR_polygon = [
-    (285, 65), (538, 65), (538, 308), (439, 371), (285, 252)
-]
+EUK_GROUP_SELECTION_POLYGONS = {
+    "Metamonada": [
+        (783, 643), (795, 628), (880, 692), (867, 712)
+    ],
+    "TSAR": [
+        (285, 65), (538, 65), (538, 308), (439, 371), (285, 252)
+    ],
+    "Cryptista": [
+        (554, 23), (750, 23), (750, 139), (671, 301), (554, 279)
+    ],
+    "Archaeplastida": [
+        (803, 130), (953, 130), (953, 430), (758, 430), (680, 300)
+    ],
+    "Haptista": [
+        (115, 283), (234, 283), (405, 361), (400, 480), (115, 480)
+    ],
+    "Amorphea": [
+        (392, 567), (550, 645), (511, 857), (243, 857), (243, 670)
+    ],
+    "CRuMs": [
+        (558, 641), (668, 622), (763, 792), (763, 857), (558, 857)
+    ],
+    "Ancoracysta": [
+        (190, 536), (300, 513), (305, 536), (196, 559)
+    ],
+    "Picozoa": [
+        (252, 603), (315, 570), (326, 592), (261, 624)
+    ],
+    "Discoba": [
+        (754, 673), (799, 728), (785, 744), (737, 687)
+    ],
+    "Ancyromonadida": [
+        (840, 511), (983, 543), (978, 566), (836, 533)
+    ],
+    "Hemimastigophora": [
+        (848, 449), (1003, 449), (1003, 476), (848, 476)
+    ],
+    "Malawimonadida": [
+        (816, 592), (825, 572), (951, 632), (942, 653)
+    ],
+}
 
-Cryptista_polygon = [
-    (554, 23), (750, 23), (750, 139), (671, 301), (554, 279)
-]
+EUK_GROUP_SELECTION_IMAGES = {
+    "Metamonada": "images/screen_images/metamonada_selection.png",
+    "TSAR": "",
+    "Cryptista": "",
+    "Archaeplastida": "",
+    "Haptista": "",
+    "Amorphea": "",
+    "CRuMs": "",
+    "Ancoracysta": "",
+    "Picozoa": "",
+    "Discoba": "",
+    "Ancyromonadida": "",
+    "Hemimastigophora": "",
+}
 
-Archaeplastida_polygon = [
-    (803, 130), (953, 130), (953, 430), (758, 430), (680, 300)
-]
+PROTIST_SELECTION_POLYGONS = {
+    "Metamonada": {
+        "Giardia intestinalis": [
+            (123, 321), (319, 321), (319, 500), (123, 500)
+        ],
+        "Giardia muris": [
+            (319, 321), (515, 321), (515, 500), (319, 500)
+        ],
+        "Spironucleus salmonicida": [
+            (515, 321), (711, 321), (711, 500), (515, 500)
+        ],
+        "Trepomonas sp.": [
+            (221, 680), (417, 680), (417, 859), (221, 859)
+        ],
+        "Hexamita inflata": [
+            (417, 680), (613, 680), (613, 859), (417, 859)
+        ],
+        "Trichomonas vaginalis": [
+            (515, 500), (711, 500), (711, 680), (515, 680)
+        ],
+        "Kipferlia bialata": [
+            (319, 500), (515, 500), (515, 680), (319, 680)
+        ],
+        "Monocercomonoides exilis": [
+            (123, 500), (319, 500), (319, 680), (123, 680)
+        ],
+    },
+    # Add more as you create them
+}
 
-Haptista_polygon = [
-    (115, 283), (234, 283), (405, 361), (400, 480), (115, 480)
-]
-
-Amorphea_polygon = [
-    (392, 567), (550, 645), (511, 857), (243, 857), (243, 670)
-]
-
-CRuMs_polygon = [
-    (558, 641), (668, 622), (763, 792), (763, 857), (558, 857)
-]
-
-Ancoracysta_polygon = [
-    (190, 536), (300, 513), (305, 536), (196, 559)
-]
-
-Picozoa_polygon = [
-    (252, 603), (315, 570), (326, 592), (261, 624)
-]
-
-Discoba_polygon = [
-    (754, 673), (799, 728), (785, 744), (737, 687)
-]
-
-Metamonada_polygon = [
-    (783, 643), (795, 628), (880, 692), (867, 712)
-]
-
-Malawimonadida_polygon = [
-    (816, 592), (825, 572), (951, 632), (942, 653)
-]
-
-Ancyromonadida_polygon = [
-    (840, 511), (983, 543), (978, 566), (836, 533)
-]
-
-Hemimastigophora_polygon = [
-    (848, 449), (1003, 449), (1003, 476), (848, 476)
-]
-
-# For easy iteration:
-GROUP_POLYGONS = {
-    "TSAR": TSAR_polygon,
-    "Cryptista": Cryptista_polygon,
-    "Archaeplastida": Archaeplastida_polygon,
-    "Haptista": Haptista_polygon,
-    "Amorphea": Amorphea_polygon,
-    "CRuMs": CRuMs_polygon,
-    "Ancoracysta": Ancoracysta_polygon,
-    "Picozoa": Picozoa_polygon,
-    "Discoba": Discoba_polygon,
-    "Metamonada": Metamonada_polygon,
-    "Malawimonadida": Malawimonadida_polygon,
-    "Ancyromonadida": Ancyromonadida_polygon,
-    "Hemimastigophora": Hemimastigophora_polygon,
+BOTTONS_POLYGONS = {
+    "Metamonada_screen": {
+        "back": [
+            (1186, 830), (1330, 830), (1330, 870), (1186, 870)
+        ],
+    }
 }

@@ -9,7 +9,7 @@ from scoreboard import Scoreboard
 from protists import *
 from energy import Energy
 from danger import Danger
-from group_polygons import GROUP_POLYGONS
+from group_polygons import *
 
 class ProtistSurvival:
     """Overall class to manage game assets and behavior."""
@@ -17,7 +17,7 @@ class ProtistSurvival:
 
     def __init__(self):
         """Initialize the game, and create game resources."""
-        self.state = "INTRO" # Possible states: INTRO, SELECTION, GAMEPLAY, GAME_OVER
+        self.state = "INTRO" # Possible states: INTRO, SELECTION, PROTIST_SELECTION, GAMEPLAY, GAME_OVER
         pygame.init()
         self.clock = pygame.time.Clock()
         self.settings = Settings()
@@ -31,7 +31,7 @@ class ProtistSurvival:
         pygame.display.set_caption("Protists Survival")
 
         # Create an instance of the Protist class.
-        self.protist = Gintestinalis(self) # This line creates an instance of the selected protist class.
+        self.protist = Gintestinalis(self) 
 
         # Create an instance to store game statistics and create a scoreboard.
         self.stats = GameStats(self, self.protist)
@@ -53,22 +53,19 @@ class ProtistSurvival:
             pygame.K_DOWN: 'moving_down'
         }
 
-        self.game_active = True  # Flag to control the game loop
     
     def run_game(self):
-        """Start the main loop for the game."""
         while True:
             if self.state == "INTRO":
                 self.run_intro()
-                self.state = "SELECTION"
             elif self.state == "SELECTION":
                 self.run_selection()
-                self.state = "GAMEPLAY"
+            elif self.state == "PROTIST_SELECTION":
+                self.run_protist_selection()
             elif self.state == "GAMEPLAY":
                 self.run_gameplay()
             elif self.state == "GAME_OVER":
                 self.run_game_over()
-
             self.clock.tick(60)
             
              
@@ -95,6 +92,7 @@ class ProtistSurvival:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         waiting = False
+                        self.state = "SELECTION"
                     elif event.key == pygame.K_ESCAPE:
                         sys.exit()
 
@@ -109,7 +107,7 @@ class ProtistSurvival:
         while waiting:
             mouse_pos = pygame.mouse.get_pos()
             highlighted_group = None
-            for group_name, polygon in GROUP_POLYGONS.items():
+            for group_name, polygon in EUK_GROUP_SELECTION_POLYGONS.items():
                 if self.point_in_polygon(mouse_pos, polygon):
                     highlighted_group = group_name
                     break
@@ -120,7 +118,7 @@ class ProtistSurvival:
                 pygame.draw.polygon(
                     self.screen,
                     (255, 255, 0),  # Yellow
-                    GROUP_POLYGONS[highlighted_group],
+                    EUK_GROUP_SELECTION_POLYGONS[highlighted_group],
                     5
                 )
             pygame.display.flip()
@@ -132,19 +130,111 @@ class ProtistSurvival:
                     if event.key == pygame.K_ESCAPE:
                         sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    for group_name, polygon in GROUP_POLYGONS.items():
+                    for group_name, polygon in EUK_GROUP_SELECTION_POLYGONS.items():
                         if self.point_in_polygon(mouse_pos, polygon):
-                            self.selected_group = group_name
-                            print(f"Selected group: {group_name}")
+                            if group_name != "Metamonada":
+                                # Show message and wait for key press
+                                self.screen.fill(self.settings.intro_bg_color)
+                                font = pygame.font.SysFont(None, 48)
+                                msg = "Sorry! This Eukaryotic supergroup is still not included in the game."
+                                msg2 = "Please select another supergroup (Metamonada)."
+                                msg3 = "Press any key to go back to the selection screen."
+                                text1 = font.render(msg, True, (255, 0, 0))
+                                text2 = font.render(msg2, True, (255, 0, 0))
+                                text3 = font.render(msg3, True, (255, 0, 0))
+                                rect1 = text1.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 - 30))
+                                rect2 = text2.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + 30))
+                                rect3 = text3.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + 90))
+                                self.screen.blit(text1, rect1)
+                                self.screen.blit(text2, rect2)
+                                self.screen.blit(text3, rect3)
+                                pygame.display.flip()
+                                msg_wait = True
+                                while msg_wait:
+                                    for e in pygame.event.get():
+                                        if e.type == pygame.QUIT:
+                                            sys.exit()
+                                        elif e.type == pygame.KEYDOWN or e.type == pygame.MOUSEBUTTONDOWN:
+                                            msg_wait = False
+                                break
+                            else:
+                                self.selected_group = group_name
+                                self.state = "PROTIST_SELECTION"
+                                waiting = False
+                                break
+
+
+    def run_protist_selection(self):
+        """Display the protist selection screen for the chosen group."""
+        group = self.selected_group
+        image_path = EUK_GROUP_SELECTION_IMAGES[group]
+
+        protist_image = pygame.image.load(image_path)
+        protist_rect = self.screen.get_rect()
+        protist_image = self._scale_image(protist_image, protist_rect)
+        protist_rect = protist_image.get_rect(center=protist_rect.center)
+
+        protist_polygons = PROTIST_SELECTION_POLYGONS.get(group, {})
+        button_polygons = BOTTONS_POLYGONS.get(f"{group}_screen", {})
+
+        waiting = True
+        while waiting:
+            mouse_pos = pygame.mouse.get_pos()
+            highlighted_protist = None
+            for name, polygon in protist_polygons.items():
+                if polygon and self.point_in_polygon(mouse_pos, polygon):
+                    highlighted_protist = name
+                    break
+
+            # Highlight BACK button if hovered
+            highlighted_back = False
+            if "back" in button_polygons and self.point_in_polygon(mouse_pos, button_polygons["back"]):
+                highlighted_back = True
+
+            self.screen.fill(self.settings.intro_bg_color)
+            self.screen.blit(protist_image, protist_rect)
+            if highlighted_protist:
+                pygame.draw.polygon(
+                    self.screen,
+                    (255, 255, 0),
+                    protist_polygons[highlighted_protist],
+                    5
+                )
+            if highlighted_back:
+                pygame.draw.polygon(
+                    self.screen,
+                    (255, 0, 0),  # Red highlight for BACK
+                    button_polygons["back"],
+                    5
+                )
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    # Check BACK button
+                    if "back" in button_polygons and self.point_in_polygon(mouse_pos, button_polygons["back"]):
+                        self.state = "SELECTION"
+                        waiting = False
+                        break
+                    # Check protist selection
+                    for name, polygon in protist_polygons.items():
+                        if polygon and self.point_in_polygon(mouse_pos, polygon):
+                            self.selected_protist = name
+                            self.state = "GAMEPLAY"
                             waiting = False
                             break
-
+                    
 
     def run_gameplay(self):
         """Start the main loop for the game."""
         if self.game_active: 
-            self._check_events() # This function checks for any events that have occurred, such as key presses or mouse movements. It is called at the beginning of each iteration of the game loop to ensure that the game responds to user input.
-            self.protist.update() # This line calls the update method of the selected protist instance.
+            self._check_events() 
+            self.protist.update()
                 
             # Spawn food and energy
             self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
@@ -348,7 +438,7 @@ class ProtistSurvival:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         # Redraw the screen during each pass through the loop.
-        self.screen.fill(self.bg_color) # This function fills the entire screen with the specified color. This is done to clear the screen before drawing new elements on it.
+        self.screen.fill(self.bg_color)
        
         # Draw HUD background and border
         hud_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.hud_height)
