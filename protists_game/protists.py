@@ -114,7 +114,7 @@ class Hinflata(Protist):
         self.danger_defence_max = 90
 
 class Kbialata(Protist):
-    """Kipferia bialata"""
+    """Kipferlia bialata"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/k_bialata/k_bialata.png')
         self.images = {'default': self.image}
@@ -147,6 +147,9 @@ def get_protist_class(name):
         "Spironucleus salmonicida": Spironucleus,
         "Trepomonas sp.": Trepomonas,
         "Hexamita inflata": Hinflata,
+        "Kipferlia bialata": Kbialata,
+        "Monocercomonoides exilis": Mexilis,
+        "Trichomonas vaginalis": Tvaginalis,
         # Add more mappings as you add more protists
     }
     return mapping.get(name)
