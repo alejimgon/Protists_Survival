@@ -1,3 +1,32 @@
+EUK_GROUP_SELECTION_IMAGES = {
+    "Metamonada": "images/screen_images/metamonada/metamonada_selection.png",
+    "TSAR": "",
+    "Cryptista": "",
+    "Archaeplastida": "",
+    "Haptista": "",
+    "Amorphea": "",
+    "CRuMs": "",
+    "Ancoracysta": "",
+    "Picozoa": "",
+    "Discoba": "",
+    "Ancyromonadida": "",
+    "Hemimastigophora": "",
+}
+
+PROTIST_INFO_IMAGES = {
+    "Metamonada": {
+        "Giardia intestinalis": "images/screen_images/metamonada/metamonada_selection_gintestinalis.png",
+        "Giardia muris": "images/screen_images/metamonada/metamonada_selection_gmuris.png",
+        "Spironucleus salmonicida": "images/screen_images/metamonada/metamonada_selection_ssalmonicida.png",
+        "Trepomonas sp.": "images/screen_images/metamonada/metamonada_selection_trepomonas.png",
+        "Hexamita inflata": "images/screen_images/metamonada/metamonada_selection_hinflata.png",
+        "Trichomonas vaginalis": "images/screen_images/metamonada/metamonada_selection_tvaginalis.png",
+        "Kipferlia bialata": "images/screen_images/metamonada/metamonada_selection_kbialata.png",
+        "Monocercomonoides exilis": "images/screen_images/metamonada/metamonada_selection_mexilis.png"
+    },
+    # Add more as you create them
+}
+
 EUK_GROUP_SELECTION_POLYGONS = {
     "Metamonada": [
         (783, 643), (795, 628), (880, 692), (867, 712)
@@ -38,21 +67,6 @@ EUK_GROUP_SELECTION_POLYGONS = {
     "Malawimonadida": [
         (816, 592), (825, 572), (951, 632), (942, 653)
     ],
-}
-
-EUK_GROUP_SELECTION_IMAGES = {
-    "Metamonada": "images/screen_images/metamonada_selection.png",
-    "TSAR": "",
-    "Cryptista": "",
-    "Archaeplastida": "",
-    "Haptista": "",
-    "Amorphea": "",
-    "CRuMs": "",
-    "Ancoracysta": "",
-    "Picozoa": "",
-    "Discoba": "",
-    "Ancyromonadida": "",
-    "Hemimastigophora": "",
 }
 
 PROTIST_SELECTION_POLYGONS = {

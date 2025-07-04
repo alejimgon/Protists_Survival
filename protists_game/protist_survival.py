@@ -6,7 +6,7 @@ from time import sleep
 from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
-from protists import *
+from protists import get_protist_class
 from energy import Energy
 from danger import Danger
 from group_polygons import *
@@ -29,13 +29,6 @@ class ProtistSurvival:
         
         # Set the title of the game window.
         pygame.display.set_caption("Protists Survival")
-
-        # Create an instance of the Protist class.
-        self.protist = Gintestinalis(self) 
-
-        # Create an instance to store game statistics and create a scoreboard.
-        self.stats = GameStats(self, self.protist)
-        self.sb = Scoreboard(self, self.protist)
         
         self.foods = pygame.sprite.Group()
         self.danger = pygame.sprite.Group()
@@ -144,14 +137,12 @@ class ProtistSurvival:
 
 
     def run_protist_selection(self):
-        """Display the protist selection screen for the chosen group."""
+        """Display the protist selection screen for the chosen group, with info image on hover."""
         group = self.selected_group
-        image_path = EUK_GROUP_SELECTION_IMAGES[group]
-
-        protist_image = pygame.image.load(image_path)
-        protist_rect = self.screen.get_rect()
-        protist_image = self._scale_image(protist_image, protist_rect)
-        protist_rect = protist_image.get_rect(center=protist_rect.center)
+        base_image_path = EUK_GROUP_SELECTION_IMAGES[group]
+        base_image = pygame.image.load(base_image_path)
+        base_image = self._scale_image(base_image, self.screen.get_rect())
+        base_rect = base_image.get_rect(center=self.screen.get_rect().center)
 
         protist_polygons = PROTIST_SELECTION_POLYGONS.get(group, {})
         button_polygons = BOTTONS_POLYGONS.get(f"{group}_screen", {})
@@ -170,8 +161,18 @@ class ProtistSurvival:
             if "back" in button_polygons and self.point_in_polygon(mouse_pos, button_polygons["back"]):
                 highlighted_back = True
 
+            # Decide which image to show
+            if highlighted_protist and highlighted_protist in PROTIST_INFO_IMAGES.get(group, {}):
+                image_path = PROTIST_INFO_IMAGES[group][highlighted_protist]
+                display_image = pygame.image.load(image_path)
+                display_image = self._scale_image(display_image, self.screen.get_rect())
+                display_rect = display_image.get_rect(center=self.screen.get_rect().center)
+            else:
+                display_image = base_image
+                display_rect = base_rect
+
             self.screen.fill(self.settings.intro_bg_color)
-            self.screen.blit(protist_image, protist_rect)
+            self.screen.blit(display_image, display_rect)
             if highlighted_protist:
                 pygame.draw.polygon(
                     self.screen,
@@ -204,8 +205,13 @@ class ProtistSurvival:
                     for name, polygon in protist_polygons.items():
                         if polygon and self.point_in_polygon(mouse_pos, polygon):
                             self.selected_protist = name
-                            self.state = "GAMEPLAY"
-                            waiting = False
+                            protist_class = get_protist_class(name)
+                            if protist_class:
+                                self.protist = protist_class(self)
+                                self.stats = GameStats(self, self.protist)
+                                self.sb = Scoreboard(self, self.protist)
+                                self.state = "GAMEPLAY"
+                                waiting = False
                             break
                     
 
@@ -228,7 +234,7 @@ class ProtistSurvival:
             self.sb.prep_score()
             self.sb.check_high_score()
 
-            # Level up every 10,000 points
+            # Level up every 2,000 points
             if self.stats.score // 2000 + 1 > self.stats.level:
                 self.stats.level = self.stats.score // 2000 + 1
                 self.settings.increase_speed()

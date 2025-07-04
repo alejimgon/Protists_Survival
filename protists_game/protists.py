@@ -69,12 +69,12 @@ class Protist:
 class Gintestinalis(Protist):
     """Giardia intestinalis"""
     def __init__(self, ps_game):
-        super().__init__(ps_game, 'images/metamonada/g_intestinalis.png')
+        super().__init__(ps_game, 'images/metamonada/g_intestinalis/g_intestinalis.png')
         self.images = {
-            'left': pygame.image.load('images/metamonada/g_intestinalis_left.png'),
-            'left_up': pygame.image.load('images/metamonada/g_intestinalis_left2.png'),
-            'right': pygame.image.load('images/metamonada/g_intestinalis_right.png'),
-            'right_up': pygame.image.load('images/metamonada/g_intestinalis_right2.png'),
+            'left': pygame.image.load('images/metamonada/g_intestinalis/g_intestinalis_left.png'),
+            'left_up': pygame.image.load('images/metamonada/g_intestinalis/g_intestinalis_left2.png'),
+            'right': pygame.image.load('images/metamonada/g_intestinalis/g_intestinalis_right.png'),
+            'right_up': pygame.image.load('images/metamonada/g_intestinalis/g_intestinalis_right2.png'),
             'default': self.image
         }
         self.last_direction = 'default'
@@ -84,7 +84,7 @@ class Gintestinalis(Protist):
 class Gmuris(Protist):
     """Giardia muris"""
     def __init__(self, ps_game):
-        super().__init__(ps_game, 'images/metamonada/g_muris.png')
+        super().__init__(ps_game, 'images/metamonada/g_muris/g_muris.png')
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 60
@@ -108,10 +108,34 @@ class Trepomonas(Protist):
 class Hinflata(Protist):
     """Hexamita inflata"""
     def __init__(self, ps_game):
-        super().__init__(ps_game, 'images/metamonada/h_inflata.png')
+        super().__init__(ps_game, 'images/metamonada/h_inflata/h_inflata.png')
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 90
+
+class Kbialata(Protist):
+    """Kipferia bialata"""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/k_bialata/k_bialata.png')
+        self.images = {'default': self.image}
+        self.last_direction = 'default'
+        self.danger_defence_max = 75
+
+class Mexilis(Protist):
+    """Monocercomonoides exilis"""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/m_exilis/m_exilis.png')
+        self.images = {'default': self.image}
+        self.last_direction = 'default'
+        self.danger_defence_max = 50
+
+class Tvaginalis(Protist):
+    """Trichomonas vaginalis"""
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/metamonada/t_vaginalis/t_vaginalis.png')
+        self.images = {'default': self.image}
+        self.last_direction = 'default'
+        self.danger_defence_max = 75
 
 # --- Factory function ---
 
