@@ -106,11 +106,11 @@ class ProtistSurvival:
         waiting = True
         while waiting:
             mouse_pos = pygame.mouse.get_pos()
-            highlighted_group = None
-            for group_name, polygon in EUK_GROUP_SELECTION_POLYGONS.items():
-                if self.point_in_polygon(mouse_pos, polygon):
-                    highlighted_group = group_name
-                    break
+            # Find the group under the mouse, if any
+            highlighted_group = next(
+                (g for g, poly in EUK_GROUP_SELECTION_POLYGONS.items() if self.point_in_polygon(mouse_pos, poly)),
+                None
+            )
 
             self.screen.fill(self.settings.intro_bg_color)
             self.screen.blit(selection_image, selection_rect)
@@ -129,39 +129,18 @@ class ProtistSurvival:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         sys.exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    for group_name, polygon in EUK_GROUP_SELECTION_POLYGONS.items():
-                        if self.point_in_polygon(mouse_pos, polygon):
-                            if group_name != "Metamonada":
-                                # Show message and wait for key press
-                                self.screen.fill(self.settings.intro_bg_color)
-                                font = pygame.font.SysFont(None, 48)
-                                msg = "Sorry! This Eukaryotic supergroup is still not included in the game."
-                                msg2 = "Please select another supergroup (Metamonada)."
-                                msg3 = "Press any key to go back to the selection screen."
-                                text1 = font.render(msg, True, (255, 0, 0))
-                                text2 = font.render(msg2, True, (255, 0, 0))
-                                text3 = font.render(msg3, True, (255, 0, 0))
-                                rect1 = text1.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 - 30))
-                                rect2 = text2.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + 30))
-                                rect3 = text3.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + 90))
-                                self.screen.blit(text1, rect1)
-                                self.screen.blit(text2, rect2)
-                                self.screen.blit(text3, rect3)
-                                pygame.display.flip()
-                                msg_wait = True
-                                while msg_wait:
-                                    for e in pygame.event.get():
-                                        if e.type == pygame.QUIT:
-                                            sys.exit()
-                                        elif e.type == pygame.KEYDOWN or e.type == pygame.MOUSEBUTTONDOWN:
-                                            msg_wait = False
-                                break
-                            else:
-                                self.selected_group = group_name
-                                self.state = "PROTIST_SELECTION"
-                                waiting = False
-                                break
+                elif event.type == pygame.MOUSEBUTTONDOWN and highlighted_group:
+                    if highlighted_group != "Metamonada":
+                        self._show_message(
+                            "Sorry! This Eukaryotic supergroup is still not included in the game.",
+                            "Please select another supergroup (Metamonada).",
+                            "Press any key to go back to the selection screen."
+                        )
+                    else:
+                        self.selected_group = highlighted_group
+                        self.state = "PROTIST_SELECTION"
+                        waiting = False
+
 
 
     def run_protist_selection(self):
@@ -232,59 +211,58 @@ class ProtistSurvival:
 
     def run_gameplay(self):
         """Start the main loop for the game."""
-        if self.game_active: 
-            self._check_events() 
-            self.protist.update()
+        self._check_events() 
+        self.protist.update()
                 
-            # Spawn food and energy
-            self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
-            self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
+        # Spawn food and energy
+        self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
+        self._spawn_entity('danger_spawn_timer', self.settings.danger_spawn_rate, self.settings.danger_chance, Danger, self.danger)
             
-            # Update all food and danger positions
-            self.foods.update()
-            self.danger.update()
+        # Update all food and danger positions
+        self.foods.update()
+        self.danger.update()
 
-            for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle food collection (increase score)
-                self.stats.score += self.settings.energy_points
-                self.sb.prep_score()
-                self.sb.check_high_score()
+        for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
+            # Handle food collection (increase score)
+            self.stats.score += self.settings.energy_points
+            self.sb.prep_score()
+            self.sb.check_high_score()
 
-                # Level up every 10,000 points
-                if self.stats.score // 2000 + 1 > self.stats.level:
-                    self.stats.level = self.stats.score // 2000 + 1
-                    self.settings.increase_speed()
-                    self.sb.prep_level()
+            # Level up every 10,000 points
+            if self.stats.score // 2000 + 1 > self.stats.level:
+                self.stats.level = self.stats.score // 2000 + 1
+                self.settings.increase_speed()
+                self.sb.prep_level()
 
-            for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
-                # Handle danger collision (decrease danger defence)
-                self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
-                if self.stats.danger_defence <= 0:
-                    self.stats.lives_left -= 1
-                    if self.stats.lives_left > 0:
-                        # Show default image and update display
-                        self.protist.set_image(self.protist.images['default'])
-                        self.protist.last_direction = 'default'
-                        self.sb.prep_score()
-                        self._update_screen()
-                        pygame.display.flip()
-                        sleep(1)
-                        # Now reset protist and game state
-                        self.stats.danger_defence = self.protist.danger_defence_max
-                        self.foods.empty()
-                        self.danger.empty()
-                        self.protist.rect.midleft = self.screen.get_rect().midleft
-                        self.protist.x = float(self.protist.rect.x)
-                        self.protist.y = float(self.protist.rect.y)
-                    else:
-                        # Game over logic
-                        self.stats.save_high_score()
-                        self.state = "GAME_OVER"
+        for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
+            # Handle danger collision (decrease danger defence)
+            self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
+            if self.stats.danger_defence <= 0:
+                self.stats.lives_left -= 1
+                if self.stats.lives_left > 0:
+                    # Show default image and update display
+                    self.protist.set_image(self.protist.images['default'])
+                    self.protist.last_direction = 'default'
+                    self.sb.prep_score()
+                    self._update_screen()
+                    pygame.display.flip()
+                    sleep(1)
+                    # Now reset protist and game state
+                    self.stats.danger_defence = self.protist.danger_defence_max
+                    self.foods.empty()
+                    self.danger.empty()
+                    self.protist.rect.midleft = self.screen.get_rect().midleft
+                    self.protist.x = float(self.protist.rect.x)
+                    self.protist.y = float(self.protist.rect.y)
+                else:
+                    # Game over logic
+                    self.stats.save_high_score()
+                    self.state = "GAME_OVER"
 
-            # Remove food and danger that has moved off the left edge
-            self._remove_offscreen_entities(self.foods)
-            self._remove_offscreen_entities(self.danger)
-            self._update_screen()
+        # Remove food and danger that has moved off the left edge
+        self._remove_offscreen_entities(self.foods)
+        self._remove_offscreen_entities(self.danger)
+        self._update_screen()
 
 
     def run_game_over(self):
@@ -335,6 +313,24 @@ class ProtistSurvival:
         scale = min(scale_w, scale_h)
         new_size = (int(img_rect.width * scale), int(img_rect.height * scale))
         return pygame.transform.smoothscale(image, new_size)
+    
+    
+    def _show_message(self, *lines):
+        """Display a message in the center of the screen and wait for user input."""
+        self.screen.fill(self.settings.intro_bg_color)
+        font = pygame.font.SysFont(None, 48)
+        for i, msg in enumerate(lines):
+            text = font.render(msg, True, (255, 0, 0))
+            rect = text.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + i*60))
+            self.screen.blit(text, rect)
+        pygame.display.flip()
+        waiting = True
+        while waiting:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    sys.exit()
+                elif e.type == pygame.KEYDOWN or e.type == pygame.MOUSEBUTTONDOWN:
+                    waiting = False
     
 
     def _check_events(self):

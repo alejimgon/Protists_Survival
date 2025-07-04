@@ -3,96 +3,73 @@ import pygame
 class Protist:
     """Base class for all protists."""
 
-
-    def __init__(self, ps_game, image_path): # ps_game is an instance of the ProtistSurvival class.
-        """Initialize the protist and set its starting position."""
+    def __init__(self, ps_game, image_path):
         self.screen = ps_game.screen
         self.settings = ps_game.settings
         self.screen_rect = ps_game.screen.get_rect()
         self.image = pygame.image.load(image_path)
         self.rect = self.image.get_rect()
-        self.rect.midleft = self.screen_rect.midleft # Position the protist at the left middle of the screen.
+        self.rect.midleft = self.screen_rect.midleft
 
-        # Store the protist's exact position.
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
-        # Movement flag; start with a protist that's not moving.
         self.moving_right = False
         self.moving_left = False
         self.moving_up = False
         self.moving_down = False
 
-        self.anim_toggle = False  # Used for animation toggling.
-        self.anim_frame = 0  # Frame counter for animation.
-
-        # Create a mask for pixel-perfect collision.
+        self.anim_toggle = False
+        self.anim_frame = 0
         self.mask = pygame.mask.from_surface(self.image)
 
-
     def set_image(self, new_image):
-        """Change the image and update the rect and mask, keeping the center fixed."""
         old_center = self.rect.center
         self.image = new_image
         self.rect = self.image.get_rect()
         self.rect.center = old_center
         self.mask = pygame.mask.from_surface(self.image)
-        # Update x and y to match new rect
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
-    
 
     def update(self):
-        """Update the protist's position based on movement flags."""
-        # Update the protist's position based on the movement flags.
-        # Move the protist in the direction of the movement flags, but only if it doesn't go out of bounds.
-        # Check if the protist is moving in any direction and update its position accordingly.
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.settings.protist_speed
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.protist_speed
         if self.moving_up:
-            self.y = max(self.y - self.settings.protist_speed, self.settings.hud_height + 10)  # Prevent going above the HUD height.
+            self.y = max(self.y - self.settings.protist_speed, self.settings.hud_height + 10)
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.y += self.settings.protist_speed
 
-        # Update rect object from self.x and self.y.
         self.rect.x = self.x
         self.rect.y = self.y
-
-        self._animation_logic()  # Handle animation logic.
-        
+        self._animation_logic()
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
 
-
     def _animation_logic(self):
-        """Handle the animation logic for the protist."""
-        # Animation logic
         if self.anim_toggle:
             self.anim_frame += 1
             if self.anim_frame % 20 < 10:
-                # Show first frame for current or last direction
                 if self.moving_left or ((self.moving_up or self.moving_down) and self.last_direction == 'left'):
                     self.set_image(self.images['left'])
                 elif self.moving_right or ((self.moving_up or self.moving_down) and self.last_direction == 'right'):
                     self.set_image(self.images['right'])
             else:
-                # Show second frame for current or last direction
                 if self.moving_left or ((self.moving_up or self.moving_down) and self.last_direction == 'left'):
                     self.set_image(self.images['left_up'])
                 elif self.moving_right or ((self.moving_up or self.moving_down) and self.last_direction == 'right'):
                     self.set_image(self.images['right_up'])
         else:
-            # When not animating, show the default or last direction image
             self.set_image(self.images[self.last_direction])
 
+# --- Subclasses for each playable protist ---
 
 class Gintestinalis(Protist):
-    """Class representing the Giardia intestinalis protist."""
+    """Giardia intestinalis"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/g_intestinalis.png')
-        # Load images for each direction.
         self.images = {
             'left': pygame.image.load('images/metamonada/g_intestinalis_left.png'),
             'left_up': pygame.image.load('images/metamonada/g_intestinalis_left2.png'),
@@ -100,45 +77,52 @@ class Gintestinalis(Protist):
             'right_up': pygame.image.load('images/metamonada/g_intestinalis_right2.png'),
             'default': self.image
         }
-        self.last_direction = 'default'  # Track the last direction for image updates.
+        self.last_direction = 'default'
         self.danger_defence_max = 75
 
 
 class Gmuris(Protist):
-    """Class representing the Giardia muris protist."""
+    """Giardia muris"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/g_muris.png')
-        # Load images for each direction.
-        self.images = {}
+        self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 60
 
-
 class Spironucleus(Protist):
-    """Class representing the Spironucleus salmonicida protist."""
+    """Spironucleus salmonicida"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/s_salmonicida.png')
-        # Load images for each direction.
-        self.images = {}
+        self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 80
 
-
 class Trepomonas(Protist):
-    """Class representing the Trepomonas sp. protist."""
+    """Trepomonas sp."""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/trepomonas.png')
-        # Load images for each direction.
-        self.images = {}
+        self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 85
 
-
 class Hinflata(Protist):
-    """Class representing the Hexamita inflata protist."""
+    """Hexamita inflata"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/h_inflata.png')
-        # Load images for each direction.
-        self.images = {}
+        self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 90
+
+# --- Factory function ---
+
+def get_protist_class(name):
+    """Return the protist class for a given protist name."""
+    mapping = {
+        "Giardia intestinalis": Gintestinalis,
+        "Giardia muris": Gmuris,
+        "Spironucleus salmonicida": Spironucleus,
+        "Trepomonas sp.": Trepomonas,
+        "Hexamita inflata": Hinflata,
+        # Add more mappings as you add more protists
+    }
+    return mapping.get(name)
