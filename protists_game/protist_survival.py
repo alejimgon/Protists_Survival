@@ -37,6 +37,10 @@ class ProtistSurvival:
         
         # Set the background color of the screen.
         self.bg_color = self.settings.bg_color
+        self.bg_image = None
+
+        # Offset for background scrolling
+        self.bg_offset_x = 0
 
         # Map pygame keys to protist movement attributes
         self.key_to_flag = {
@@ -159,11 +163,6 @@ class ProtistSurvival:
                     highlighted_protist = name
                     break
 
-            # Highlight BACK button if hovered
-            highlighted_back = False
-            if "back" in button_polygons and self.point_in_polygon(mouse_pos, button_polygons["back"]):
-                highlighted_back = True
-
             # Decide which image to show
             if highlighted_protist and highlighted_protist in PROTIST_INFO_IMAGES.get(group, {}):
                 image_path = PROTIST_INFO_IMAGES[group][highlighted_protist]
@@ -207,6 +206,12 @@ class ProtistSurvival:
                                 self.protist = protist_class(self)
                                 self.stats = GameStats(self, self.protist)
                                 self.sb = Scoreboard(self, self.protist)
+                                bg_path = PROTIST_BACKGROUND_IMAGES.get(name)
+                                if bg_path:
+                                    bg_img = pygame.image.load(bg_path)
+                                    self.bg_image = self._scale_image(bg_img, self.screen.get_rect())
+                                else:
+                                    self.bg_image = None
                                 self.state = "GAMEPLAY"
                                 waiting = False
                             break
@@ -216,6 +221,15 @@ class ProtistSurvival:
         """Start the main loop for the game."""
         self._check_events() 
         self.protist.update()
+
+        # Adjust scroll speed as desired
+        scroll_speed = 4
+
+        # Move background offset based on protist movement
+        if self.protist.moving_right:
+            self.bg_offset_x += scroll_speed
+        elif self.protist.moving_left:
+            self.bg_offset_x -= scroll_speed
                 
         # Spawn food and energy
         self._spawn_entity('food_spawn_timer', self.settings.energy_spawn_rate, self.settings.energy_chance, Energy, self.foods)
@@ -436,9 +450,27 @@ class ProtistSurvival:
                     
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
-        # Redraw the screen during each pass through the loop.
-        self.screen.fill(self.bg_color)
-       
+        # Draw protist-specific background if set, only in the game area (below HUD)
+        if self.bg_image:
+            game_rect = pygame.Rect(
+                0,
+                self.settings.hud_height,
+                self.settings.screen_width,
+                self.settings.screen_height - self.settings.hud_height
+            )
+            # Scale the background to fit the game area
+            bg_scaled = pygame.transform.smoothscale(self.bg_image, (game_rect.width, game_rect.height))
+            bg_width = bg_scaled.get_width()
+            offset_x = self.bg_offset_x % bg_width  # Loop the offset
+
+            # Tile the background horizontally
+            x = -offset_x
+            while x < self.settings.screen_width:
+                self.screen.blit(bg_scaled, (x, self.settings.hud_height))
+                x += bg_width
+        else:
+            self.screen.fill(self.bg_color)
+
         # Draw HUD background and border
         hud_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.hud_height)
         pygame.draw.rect(self.screen, self.settings.hud_bg_color, hud_rect)
@@ -454,8 +486,6 @@ class ProtistSurvival:
         self.sb.show_score()
         self._draw_entities(self.foods)
         self._draw_entities(self.danger)
-        
-        # Make the most recently drawn screen visible.
         pygame.display.flip()
 
 

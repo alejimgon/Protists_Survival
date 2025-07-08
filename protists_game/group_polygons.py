@@ -27,6 +27,12 @@ PROTIST_INFO_IMAGES = {
     # Add more as you create them
 }
 
+PROTIST_BACKGROUND_IMAGES = {
+    "Giardia intestinalis": "images/background/small_intestine.png",
+    "Giardia muris": "images/background/small_intestine.png",
+    "Monocercomonoides exilis": "images/background/small_intestine.png",
+}
+
 EUK_GROUP_SELECTION_POLYGONS = {
     "Metamonada": [
         (783, 643), (795, 628), (880, 692), (867, 712)
