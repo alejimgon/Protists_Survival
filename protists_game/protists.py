@@ -85,7 +85,13 @@ class Gmuris(Protist):
     """Giardia muris"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/g_muris/g_muris.png')
-        self.images = {'default': self.image}
+        self.images = {
+            'left': pygame.image.load('images/metamonada/g_muris/g_muris_left.png'),
+            'left_up': pygame.image.load('images/metamonada/g_muris/g_muris_left2.png'),
+            'right': pygame.image.load('images/metamonada/g_muris/g_muris_right.png'),
+            'right_up': pygame.image.load('images/metamonada/g_muris/g_muris_right2.png'),
+            'default': self.image
+        }
         self.last_direction = 'default'
         self.danger_defence_max = 60
 
