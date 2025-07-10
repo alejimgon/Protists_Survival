@@ -30,7 +30,9 @@ PROTIST_INFO_IMAGES = {
 PROTIST_BACKGROUND_IMAGES = {
     "Giardia intestinalis": "images/background/small_intestine.png",
     "Giardia muris": "images/background/small_intestine.png",
+    "Spironucleus salmonicida": "images/background/small_intestine.png",
     "Monocercomonoides exilis": "images/background/small_intestine.png",
+    "Trichomonas vaginalis": "images/background/vaginal_epithelium.png",
 }
 
 EUK_GROUP_SELECTION_POLYGONS = {
