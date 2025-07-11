@@ -32,7 +32,7 @@ class Settings:
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
-        self.protist_speed = 2.0
+        self.protist_speed = 3.0
         self.energy_speed = 1.5
         self.danger_speed = 1.5
 
