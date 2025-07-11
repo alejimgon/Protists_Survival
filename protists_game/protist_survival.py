@@ -7,8 +7,8 @@ from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
 from protists import get_protist_class
-from energy import Energy
-from danger import Danger
+from energy import ENERGY_TYPES, Energy
+from danger import DANGER_TYPES, Danger
 from group_polygons import *
 
 class ProtistSurvival:
@@ -239,11 +239,13 @@ class ProtistSurvival:
         self.foods.update()
         self.danger.update()
 
-        for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=True, collided=pygame.sprite.collide_mask):
-            # Handle food collection (increase score)
-            self.stats.score += self.settings.energy_points
-            self.sb.prep_score()
-            self.sb.check_high_score()
+        for food in pygame.sprite.spritecollide(self.protist, self.foods, dokill=False, collided=pygame.sprite.collide_mask):
+            # Only eat if protist can eat this type
+            if hasattr(food, 'energy_type') and food.energy_type in self.protist.can_eat:
+                self.foods.remove(food)
+                self.stats.score += food.points  # Use the points from the food object
+                self.sb.prep_score()
+                self.sb.check_high_score()
 
             # Level up every 2,000 points
             if self.stats.score // 2000 + 1 > self.stats.level:
@@ -251,31 +253,36 @@ class ProtistSurvival:
                 self.settings.increase_speed()
                 self.sb.prep_level()
 
-        for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=True, collided=pygame.sprite.collide_mask):
-            # Handle danger collision (decrease danger defence)
-            self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
-            if self.stats.danger_defence <= 0:
-                self.stats.lives_left -= 1
-                if self.stats.lives_left > 0:
-                    # Show default image and update display
-                    self.protist.set_image(self.protist.images['default'])
-                    self.protist.last_direction = 'default'
-                    self.sb.prep_score()
-                    self._update_screen()
-                    pygame.display.flip()
-                    sleep(1)
-                    # Now reset protist and game state
-                    self.stats.danger_defence = self.protist.danger_defence_max
-                    self.foods.empty()
-                    self.danger.empty()
-                    self.protist.rect.midleft = self.screen.get_rect().midleft
-                    self.protist.x = float(self.protist.rect.x)
-                    self.protist.y = float(self.protist.rect.y)
-                else:
-                    # Game over logic
-                    self.stats.save_high_score()
-                    self.frozen_bg = self.screen.copy()
-                    self.state = "GAME_OVER"
+        for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=False, collided=pygame.sprite.collide_mask):
+            # Only affected if not resistant to this danger type
+            if not hasattr(danger, 'danger_type') or danger.danger_type not in getattr(self.protist, 'danger_resist', []):
+                self.danger.remove(danger)
+                self.stats.danger_defence -= danger.damage  # Use the damage from the danger object
+                
+                # Handle danger collision (decrease danger defence)
+                self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
+                if self.stats.danger_defence <= 0:
+                    self.stats.lives_left -= 1
+                    if self.stats.lives_left > 0:
+                        # Show default image and update display
+                        self.protist.set_image(self.protist.images['default'])
+                        self.protist.last_direction = 'default'
+                        self.sb.prep_score()
+                        self._update_screen()
+                        pygame.display.flip()
+                        sleep(1)
+                        # Now reset protist and game state
+                        self.stats.danger_defence = self.protist.danger_defence_max
+                        self.foods.empty()
+                        self.danger.empty()
+                        self.protist.rect.midleft = self.screen.get_rect().midleft
+                        self.protist.x = float(self.protist.rect.x)
+                        self.protist.y = float(self.protist.rect.y)
+                    else:
+                        # Game over logic
+                        self.stats.save_high_score()
+                        self.frozen_bg = self.screen.copy()
+                        self.state = "GAME_OVER"
 
         # Remove food and danger that has moved off the left edge
         self._remove_offscreen_entities(self.foods)
@@ -481,17 +488,43 @@ class ProtistSurvival:
                 self.protist.set_image(self.protist.images[self.protist.last_direction])
 
 
+    def _expand_allowed_types(self, allowed_list, all_types_dict):
+        """Expand allowed types/categories to a flat list of types."""
+        expanded = []
+        for entry in allowed_list:
+            # If entry matches a category, add all types with that category
+            found = False
+            for tkey, tdata in all_types_dict.items():
+                if tdata['category'] == entry:
+                    expanded.append(tkey)
+                    found = True
+            if not found and entry in all_types_dict:
+                expanded.append(entry)
+        return expanded
+
     def _spawn_entity(self, timer_attr, spawn_rate, chance, entity_class, group):
-        """Generic spawner for food and danger."""
+        """Spawn entities like food or dangers based on a timer and chance, supporting categories."""
         setattr(self, timer_attr, getattr(self, timer_attr) + 1)
         if getattr(self, timer_attr) > spawn_rate:
             if random.random() < chance:
-                entity = entity_class(self.screen.get_rect(), self.settings)
+                if entity_class.__name__ == "Energy":
+                    allowed = GROUP_ALLOWED_ENERGY.get(self.selected_group, list(ENERGY_TYPES.keys()))
+                    allowed_types = self._expand_allowed_types(allowed, ENERGY_TYPES)
+                    energy_type = random.choice(allowed_types)
+                    entity = entity_class(self.screen.get_rect(), self.settings, energy_type=energy_type)
+                elif entity_class.__name__ == "Danger":
+                    allowed = GROUP_ALLOWED_DANGER.get(self.selected_group, list(DANGER_TYPES.keys()))
+                    allowed_types = self._expand_allowed_types(allowed, DANGER_TYPES)
+                    danger_type = random.choice(allowed_types)
+                    entity = entity_class(self.screen.get_rect(), self.settings, danger_type=danger_type)
+                else:
+                    entity = entity_class(self.screen.get_rect(), self.settings)
                 group.add(entity)
             setattr(self, timer_attr, 0)
 
     
     def _remove_offscreen_entities(self, group):
+        """Remove entities that have moved off the left edge of the screen."""
         for entity in list(group):
             if entity.rect.right < 0:
                 group.remove(entity)

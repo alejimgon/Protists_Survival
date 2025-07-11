@@ -79,6 +79,8 @@ class Gintestinalis(Protist):
         }
         self.last_direction = 'default'
         self.danger_defence_max = 75
+        self.can_eat = ['glucose', 'fructose', 'arginine']
+        self.danger_resist = []
 
 
 class Gmuris(Protist):
@@ -94,14 +96,23 @@ class Gmuris(Protist):
         }
         self.last_direction = 'default'
         self.danger_defence_max = 60
+        self.can_eat = ['glucose', 'fructose', 'arginine']
+        self.danger_resist = []
 
 class Spironucleus(Protist):
     """Spironucleus salmonicida"""
     def __init__(self, ps_game):
-        super().__init__(ps_game, 'images/metamonada/s_salmonicida.png')
-        self.images = {'default': self.image}
+        super().__init__(ps_game, 'images/metamonada/s_salmonicida/s_salmonicida.png')
+        self.images = {
+            'left': pygame.image.load('images/metamonada/s_salmonicida/s_salmonicida_left.png'),
+            'left_up': pygame.image.load('images/metamonada/s_salmonicida/s_salmonicida_left2.png'),
+            'right': pygame.image.load('images/metamonada/s_salmonicida/s_salmonicida_right.png'),
+            'right_up': pygame.image.load('images/metamonada/s_salmonicida/s_salmonicida_right2.png'),
+            'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 80
+        self.can_eat = ['glucose', 'fructose', 'arginine', 'bacteria']
+        self.danger_resist = []
 
 class Trepomonas(Protist):
     """Trepomonas sp."""

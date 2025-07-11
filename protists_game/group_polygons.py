@@ -114,3 +114,13 @@ BOTTONS_POLYGONS = {
         ],
     }
 }
+
+GROUP_ALLOWED_ENERGY = {
+    "Metamonada": ['glucose', 'fructose', 'arginine', 'bacteria']
+    # etc.
+}
+
+GROUP_ALLOWED_DANGER = {
+    "Metamonada": ['ROS']
+    # etc.
+}
