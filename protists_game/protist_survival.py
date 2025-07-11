@@ -274,6 +274,7 @@ class ProtistSurvival:
                 else:
                     # Game over logic
                     self.stats.save_high_score()
+                    self.frozen_bg = self.screen.copy()
                     self.state = "GAME_OVER"
 
         # Remove food and danger that has moved off the left edge
@@ -283,25 +284,73 @@ class ProtistSurvival:
 
 
     def run_game_over(self):
-        """Display the game over screen."""
-        # Load and display the game over image
-        game_over_image = pygame.image.load('images/screen_images/game_over_screen.png')
-        game_over_rect = game_over_image.get_rect(center=self.screen.get_rect().center)
-        
-        self.screen.fill(self.bg_color)
-        self.screen.blit(game_over_image, game_over_rect)
-        pygame.display.flip()
+        """Display the game over screen, with flashing effect if new high score."""
+        import time
 
-        # Wait for user input to restart or quit
+        # Paths to your images
+        game_over_path = 'images/screen_images/game_over/game_over.png'
+        new_record_path = 'images/screen_images/game_over/game_over_record.png'
+
+        # Load images
+        game_over_image = pygame.image.load(game_over_path).convert_alpha()
+        new_record_image = pygame.image.load(new_record_path).convert_alpha()
+
+        # Define the gameplay area (below HUD)
+        game_area_rect = pygame.Rect(
+            0,
+            self.settings.hud_height,
+            self.settings.screen_width,
+            self.settings.screen_height - self.settings.hud_height
+        )
+
+        # Optionally scale images to fit the gameplay area (if needed)
+        game_over_image = self._scale_image(game_over_image, game_area_rect)
+        new_record_image = self._scale_image(new_record_image, game_area_rect)
+
+        # Center images in the gameplay area
+        game_over_rect = game_over_image.get_rect(center=game_area_rect.center)
+        new_record_rect = new_record_image.get_rect(center=game_area_rect.center)
+
+        # Determine if new high score
+        is_new_high = self.stats.score >= self.stats.high_score
+
         waiting = True
+        flash = True
+        last_switch = time.time()
+        flash_interval = 0.6  # seconds
+
         while waiting:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
                         waiting = False
                         self.state = "SELECTION"
+                    elif event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
+                        self.stats.save_high_score()
+                        sys.exit()
+            
+            # Draw the frozen gameplay screen
+            if hasattr(self, 'frozen_bg') and self.frozen_bg:
+                self.screen.blit(self.frozen_bg, (0, 0))
+            else:
+                # fallback if for some reason frozen_bg is missing
+                self.screen.fill(self.settings.bg_color)
+
+            # Draw the game over images in the gameplay area (below HUD)
+            if is_new_high:
+                now = time.time()
+                if now - last_switch > flash_interval:
+                    flash = not flash
+                    last_switch = now
+                if flash:
+                    self.screen.blit(game_over_image, game_over_rect)
+                else:
+                    self.screen.blit(new_record_image, new_record_rect)
+            else:
+                self.screen.blit(game_over_image, game_over_rect)
+
+            pygame.display.flip()
+            self.clock.tick(60)
 
     
     def point_in_polygon(self, point, polygon):
