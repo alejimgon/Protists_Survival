@@ -33,6 +33,7 @@ ENERGY_TYPES = {
                 'images/food/bacteria2.png',
                 'images/food/bacteria3.png',
                 'images/food/bacteria4.png',
+                'images/food/bacteria5.png',
                 # add more bacteria images
             ],
             'category': 'bacteria',
