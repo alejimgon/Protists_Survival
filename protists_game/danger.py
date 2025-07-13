@@ -10,28 +10,28 @@ DANGER_TYPES = {
             # add more hydroxyl radical images if you have them
         ],
         'category': 'ROS',
-        'damage': 25,
+        'damage': 10,
     },
     'oxygen': {
         'images': [
             'images/danger/oxygen.png',
         ],
         'category': 'ROS',
-        'damage': 20,
+        'damage': 5,
     },
     'peroxide': {
         'images': [
             'images/danger/peroxide.png',
         ],
         'category': 'ROS',
-        'damage': 25,
+        'damage': 10,
     },
     'superoxide': {
         'images': [
             'images/danger/superoxide.png',
         ],
         'category': 'ROS',
-        'damage': 30,
+        'damage': 15,
     },
     # Add more danger types as needed
 }

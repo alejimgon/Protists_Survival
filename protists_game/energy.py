@@ -27,15 +27,17 @@ ENERGY_TYPES = {
         'category': 'amino_acid',
         'points': 50,
     },
-#        'bacteria': {
-#            'images': [
-#                'images/food/bacteria1.png',
-#                'images/food/bacteria2.png',
-#                # add more bacteria images
-#            ],
-#            'category': 'bacteria',
-#            'points': 100,
-#        },
+        'bacteria': {
+            'images': [
+                'images/food/bacteria1.png',
+                'images/food/bacteria2.png',
+                'images/food/bacteria3.png',
+                'images/food/bacteria4.png',
+                # add more bacteria images
+            ],
+            'category': 'bacteria',
+            'points': 100,
+        },
     # Add more types as needed
 }
 

@@ -243,7 +243,7 @@ class ProtistSurvival:
             # Only eat if protist can eat this type
             if hasattr(food, 'energy_type') and food.energy_type in self.protist.can_eat:
                 self.foods.remove(food)
-                self.stats.score += food.points  # Use the points from the food object
+                self.stats.score += food.points 
                 self.sb.prep_score()
                 self.sb.check_high_score()
 

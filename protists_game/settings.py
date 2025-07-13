@@ -36,9 +36,6 @@ class Settings:
         self.energy_speed = 1.5
         self.danger_speed = 1.5
 
-         # Scoring settings
-        self.energy_points = 50
-
 
     def increase_speed(self):
         """Increase speed settings."""
