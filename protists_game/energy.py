@@ -20,6 +20,13 @@ ENERGY_TYPES = {
         'category': 'carbohydrate',
         'points': 50,
     },
+    'maltose': {
+        'images': [
+            'images/food/maltose.png',
+        ],
+        'category': 'carbohydrate',
+        'points': 50,
+    },
     'arginine': {
         'images': [
             'images/food/arginine.png',

@@ -116,7 +116,7 @@ BOTTONS_POLYGONS = {
 }
 
 GROUP_ALLOWED_ENERGY = {
-    "Metamonada": ['glucose', 'fructose', 'arginine', 'bacteria']
+    "Metamonada": ['glucose', 'fructose', 'maltose', 'arginine', 'bacteria']
     # etc.
 }
 
