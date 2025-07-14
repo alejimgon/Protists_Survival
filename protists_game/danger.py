@@ -1,7 +1,9 @@
-# danger.py
-from moving_entity import MovingEntity
 import pygame
 import random
+
+from moving_entity import MovingEntity
+
+# Remember to modify the GROUP_ALLOWED_ENERGY and GROUP_ALLOWED_DANGER in group_polygons.py when adding new danger types.
 
 DANGER_TYPES = {
     'hydroxyl_radical': {

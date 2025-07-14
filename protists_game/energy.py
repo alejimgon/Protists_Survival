@@ -3,7 +3,7 @@ import random
 
 from moving_entity import MovingEntity
 
-# energy.py
+# Remember to modify the GROUP_ALLOWED_ENERGY and GROUP_ALLOWED_DANGER in group_polygons.py when adding new energy types.
 
 ENERGY_TYPES = {
     'glucose': {
