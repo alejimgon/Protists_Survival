@@ -79,7 +79,7 @@ class Gintestinalis(Protist):
         }
         self.last_direction = 'default'
         self.danger_defence_max = 75
-        self.can_eat = ['glucose', 'fructose', 'arginine']
+        self.can_eat = ['glucose', 'arginine']
         self.danger_resist = []
 
 
@@ -121,6 +121,8 @@ class Trepomonas(Protist):
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 85
+        self.can_eat = ['glucose', 'fructose', 'arginine', 'bacteria']
+        self.danger_resist = []
 
 class Hinflata(Protist):
     """Hexamita inflata"""
@@ -129,6 +131,8 @@ class Hinflata(Protist):
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 90
+        self.can_eat = ['glucose', 'fructose', 'maltose', 'arginine', 'bacteria']
+        self.danger_resist = []
 
 class Kbialata(Protist):
     """Kipferlia bialata"""
@@ -137,6 +141,9 @@ class Kbialata(Protist):
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 75
+        self.can_eat = ['glucose', 'arginine', 'bacteria']
+        self.danger_resist = []
+
 
 class Mexilis(Protist):
     """Monocercomonoides exilis"""
@@ -145,6 +152,8 @@ class Mexilis(Protist):
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 50
+        self.can_eat = ['glucose', 'arginine', 'bacteria']
+        self.danger_resist = []
 
 class Tvaginalis(Protist):
     """Trichomonas vaginalis"""
@@ -153,6 +162,8 @@ class Tvaginalis(Protist):
         self.images = {'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 75
+        self.can_eat = ['glucose', 'arginine', 'bacteria']
+        self.danger_resist = []
 
 # --- Factory function ---
 
