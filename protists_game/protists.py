@@ -149,10 +149,15 @@ class Mexilis(Protist):
     """Monocercomonoides exilis"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/m_exilis/m_exilis.png')
-        self.images = {'default': self.image}
+        self.images = {
+            'left': pygame.image.load('images/metamonada/m_exilis/m_exilis_left.png'),
+            'left_up': pygame.image.load('images/metamonada/m_exilis/m_exilis_left2.png'),
+            'right': pygame.image.load('images/metamonada/m_exilis/m_exilis_right.png'),
+            'right_up': pygame.image.load('images/metamonada/m_exilis/m_exilis_right2.png'),
+            'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 50
-        self.can_eat = ['glucose', 'arginine', 'bacteria']
+        self.can_eat = ['bacteria']
         self.danger_resist = []
 
 class Tvaginalis(Protist):

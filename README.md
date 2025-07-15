@@ -17,6 +17,18 @@ Protists Survival is an educational and arcade-style game where you play as a pr
 
 ---
 
+## Requirements
+
+- Python 3.x
+- [pygame](https://www.pygame.org/) library
+
+Install pygame with:
+```bash
+pip install pygame
+```
+
+---
+
 ## How to Play
 
 1. **Start the Game:**  
@@ -26,7 +38,7 @@ Protists Survival is an educational and arcade-style game where you play as a pr
    ```
 
 2. **Select a Supergroup:**  
-   Use your mouse to select a eukaryotic supergroup (currently, only *Giardia intestinalis*, *Giardia muris* and *Spironucleus salmonicida* in Metamonada is playable).
+   Use your mouse to select a eukaryotic supergroup (currently, only *Giardia intestinalis*, *Giardia muris*, *Spironucleus salmonicida* and *Monocercomonoides exilis* in Metamonada is playable).
 
 3. **Pick Your Protist:**  
    Hover over and click on a protist to see its info and select it as your avatar.
@@ -69,18 +81,6 @@ protists_game/
         danger/
         metamonada/
         screen_images/
-```
-
----
-
-## Requirements
-
-- Python 3.x
-- [pygame](https://www.pygame.org/) library
-
-Install pygame with:
-```bash
-pip install pygame
 ```
 
 ---
