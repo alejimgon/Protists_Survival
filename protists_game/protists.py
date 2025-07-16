@@ -138,7 +138,12 @@ class Kbialata(Protist):
     """Kipferlia bialata"""
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/k_bialata/k_bialata.png')
-        self.images = {'default': self.image}
+        self.images = {
+            'left': pygame.image.load('images/metamonada/k_bialata/k_bialata_left.png'),
+            'left_up': pygame.image.load('images/metamonada/k_bialata/k_bialata_left2.png'),
+            'right': pygame.image.load('images/metamonada/k_bialata/k_bialata_right.png'),
+            'right_up': pygame.image.load('images/metamonada/k_bialata/k_bialata_right2.png'),
+            'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 75
         self.can_eat = ['glucose', 'arginine', 'bacteria']
