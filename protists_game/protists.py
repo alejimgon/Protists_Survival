@@ -133,7 +133,12 @@ class Hinflata(Protist):
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/h_inflata/h_inflata.png')
         self.name = "Hexamita inflata"
-        self.images = {'default': self.image}
+        self.images = {
+            'left': pygame.image.load('images/metamonada/h_inflata/h_inflata_left.png'),
+            'left_up': pygame.image.load('images/metamonada/h_inflata/h_inflata_left2.png'),
+            'right': pygame.image.load('images/metamonada/h_inflata/h_inflata_right.png'),
+            'right_up': pygame.image.load('images/metamonada/h_inflata/h_inflata_right2.png'),
+            'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 90
         self.can_eat = ['glucose', 'fructose', 'maltose', 'arginine', 'bacteria']
