@@ -438,13 +438,11 @@ class ProtistSurvival:
             # If neither left nor right is pressed, default to right
             if not self.protist.moving_left and not self.protist.moving_right:
                 self.protist.last_direction = 'right'
-            self.protist.set_image(self.protist.images[self.protist.last_direction])
         elif event.key == pygame.K_DOWN:
             self.protist.anim_toggle = True
             # If neither left nor right is pressed, default to right
             if not self.protist.moving_left and not self.protist.moving_right:
                 self.protist.last_direction = 'right'
-            self.protist.set_image(self.protist.images[self.protist.last_direction])
         elif event.key == pygame.K_SPACE:
             # Danger defence replenish logic
             replenish_cost = 100
@@ -471,22 +469,20 @@ class ProtistSurvival:
 
     def _update_protist_image(self):
         """Update the protist's image based on movement."""
-        # Only set to default if NO movement keys are pressed
+        # If no movement keys are pressed, show the last used image (left/right) or default
         if not (self.protist.moving_left or self.protist.moving_right or
                 self.protist.moving_up or self.protist.moving_down):
-            self.protist.set_image(self.protist.images['default'])
-        else:
-            # If still moving left or right, keep that image
-            if self.protist.moving_left:
-                self.protist.set_image(self.protist.images['left'])
-                self.protist.last_direction = 'left'
-            elif self.protist.moving_right:
-                self.protist.set_image(self.protist.images['right'])
-                self.protist.last_direction = 'right'
-            else:
-                # If moving up/down only, keep last horizontal direction image
-                self.protist.set_image(self.protist.images[self.protist.last_direction])
-
+            # Try to show the last used image, fallback to default
+            img = self.protist.images.get(self.protist.last_direction)
+            if img is None and self.protist.last_direction == 'right':
+                img = self.protist.images.get('right_1', self.protist.images['default'])
+            elif img is None and self.protist.last_direction == 'left':
+                img = self.protist.images.get('left_1', self.protist.images['default'])
+            elif img is None:
+                img = self.protist.images['default']
+            self.protist.set_image(img)
+        # Otherwise, do nothing: let the protist's own animation logic handle the image
+        
 
     def _expand_allowed_types(self, allowed_list, all_types_dict):
         """Expand allowed types/categories to a flat list of types."""

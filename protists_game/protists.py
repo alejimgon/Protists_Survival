@@ -120,13 +120,47 @@ class Spironucleus(Protist):
 class Trepomonas(Protist):
     """Trepomonas sp."""
     def __init__(self, ps_game):
-        super().__init__(ps_game, 'images/metamonada/trepomonas.png')
+        super().__init__(ps_game, 'images/metamonada/trepomonas/trepomonas.png')
         self.name = "Trepomonas sp."
-        self.images = {'default': self.image}
+        self.images = {
+            'left_1': pygame.image.load('images/metamonada/trepomonas/trepomonas_left.png'),
+            'left_2': pygame.image.load('images/metamonada/trepomonas/trepomonas_left2.png'),
+            'left_3': pygame.image.load('images/metamonada/trepomonas/trepomonas_left3.png'),
+            'left_4': pygame.image.load('images/metamonada/trepomonas/trepomonas_left4.png'),
+            'right_1': pygame.image.load('images/metamonada/trepomonas/trepomonas_right.png'),
+            'right_2': pygame.image.load('images/metamonada/trepomonas/trepomonas_right2.png'),
+            'right_3': pygame.image.load('images/metamonada/trepomonas/trepomonas_right3.png'),
+            'right_4': pygame.image.load('images/metamonada/trepomonas/trepomonas_right4.png'),
+            'default': self.image}
         self.last_direction = 'default'
         self.danger_defence_max = 85
         self.can_eat = ['glucose', 'fructose', 'arginine', 'bacteria']
         self.danger_resist = []
+        self.rot_frame = 0
+
+    def _animation_logic(self):
+        # Animate if moving left/right, or moving up/down with a last_direction
+        if (
+            self.moving_left
+            or (not self.moving_right and (self.moving_up or self.moving_down) and self.last_direction.startswith('left'))
+        ):
+            self.rot_frame = (self.rot_frame + 1) % 40
+            frame = (self.rot_frame // 10) + 1
+            self.set_image(self.images.get(f'left_{frame}', self.images['default']))
+            self.last_direction = f'left_{frame}'
+        elif (
+            self.moving_right
+            or (not self.moving_left and (self.moving_up or self.moving_down) and self.last_direction.startswith('right'))
+            or (not self.moving_left and not self.moving_right and (self.moving_up or self.moving_down))
+        ):
+            # The last clause ensures that if only up/down is pressed, default to right animation
+            self.rot_frame = (self.rot_frame + 1) % 40
+            frame = (self.rot_frame // 10) + 1
+            self.set_image(self.images.get(f'right_{frame}', self.images['default']))
+            self.last_direction = f'right_{frame}'
+        else:
+            # Not moving: show last used image
+            self.set_image(self.images.get(self.last_direction, self.images['default']))
 
 class Hinflata(Protist):
     """Hexamita inflata"""
