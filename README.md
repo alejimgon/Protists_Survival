@@ -2,7 +2,7 @@
   <img src="images/screen_images/tittle.png" alt="Protists Survival Title" />
 </p>
 
-Protists Survival is an educational and arcade-style game where you play as a protist from different eukaryotic supergroups. Your goal is to survive as long as possible by collecting energy and avoiding dangers in a dynamic, scrolling environment inspired by real protist biology.
+Protists Survival is an educational arcade-style game where you play as a protist from different eukaryotic supergroups. Your goal is to survive as long as possible by collecting energy and avoiding dangers in a dynamic, scrolling environment inspired by real protist biology.
 
 ---
 
@@ -22,7 +22,29 @@ Protists Survival is an educational and arcade-style game where you play as a pr
 - Python 3.x
 - [pygame](https://www.pygame.org/) library
 
-Install pygame with:
+---
+
+### Recommended: Install with Conda
+
+It is recommended to use a dedicated [conda](https://docs.conda.io/en/latest/) environment for the game:
+
+```bash
+# Create a new environment named 'protists' with Python 3.11 (or your preferred version)
+conda create -n protists python=3.11
+
+# Activate the environment
+conda activate protists
+
+# Install pygame (from conda-forge for best compatibility)
+conda install -c conda-forge pygame
+```
+
+---
+
+### Alternative: Install with pip
+
+If you prefer pip, you can install pygame with:
+
 ```bash
 pip install pygame
 ```
@@ -38,10 +60,17 @@ pip install pygame
    ```
 
 2. **Select a Supergroup:**  
-   Use your mouse to select a eukaryotic supergroup (currently, only *Giardia intestinalis*, *Giardia muris*, *Spironucleus salmonicida* and *Monocercomonoides exilis* in Metamonada is playable).
+   Use your mouse to select a eukaryotic supergroup (currently only Metamonada is playable).
+   <p align="center">
+   <img src="images/screen_images/selection_screen.png" alt="Eukaryotic Tree of Life" />
+   </p>
 
 3. **Pick Your Protist:**  
-   Hover over and click on a protist to see its info and select it as your avatar.
+   Hover over a protist to see its info and click to select it as your avatar.
+   <p align="center">
+   <img src="images/screen_images/metamonada/metamonada_selection_tvaginalis.png" alt="Metamonada selection panel" />
+   </p>
+
 
 4. **Survive!**  
    - Use the arrow keys to move your protist.
@@ -58,6 +87,10 @@ pip install pygame
 - **Spacebar:** Replenish danger defence (costs score)
 - **Q or ESC:** Quit the game
 - **Enter/Return:** Advance from intro and game over screens
+<p align="center">
+<img src="images/screen_images/example_screen/m_exilis_example.png" alt="M. exilis game" />
+</p>
+
 
 ---
 
