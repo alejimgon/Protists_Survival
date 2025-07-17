@@ -2,6 +2,9 @@
 reference_papers/*
 protists_game/high_score.txt
 
+# Illustrator files
+*.ai
+
 # Pygame build process: config.py setup.py
 /Setup
 *.pyc
