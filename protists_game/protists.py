@@ -64,6 +64,39 @@ class Protist:
         else:
             self.set_image(self.images[self.last_direction])
 
+
+class RotatoryProtist(Protist):
+    """Base class for protists that have a rotation animation."""
+
+    ROT_FRAME_CYCLE = 40  # Total frames for a full cycle (4 images x 10 frames each)
+
+    def __init__(self, ps_game, image_path):
+        super().__init__(ps_game, image_path)
+        self.rot_frame = 0
+
+    def _animation_logic(self):
+        # Animate if moving left/right, or moving up/down with a last_direction
+        if (
+            self.moving_left
+            or (not self.moving_right and (self.moving_up or self.moving_down) and self.last_direction.startswith('left'))
+        ):
+            self.rot_frame = (self.rot_frame + 1) % self.ROT_FRAME_CYCLE
+            frame = (self.rot_frame // (self.ROT_FRAME_CYCLE // 4)) + 1
+            self.set_image(self.images.get(f'left_{frame}', self.images['default']))
+            self.last_direction = f'left_{frame}'
+        elif (
+            self.moving_right
+            or (not self.moving_left and (self.moving_up or self.moving_down) and self.last_direction.startswith('right'))
+            or (not self.moving_left and not self.moving_right and (self.moving_up or self.moving_down))
+        ):
+            self.rot_frame = (self.rot_frame + 1) % self.ROT_FRAME_CYCLE
+            frame = (self.rot_frame // (self.ROT_FRAME_CYCLE // 4)) + 1
+            self.set_image(self.images.get(f'right_{frame}', self.images['default']))
+            self.last_direction = f'right_{frame}'
+        else:
+            self.set_image(self.images.get(self.last_direction, self.images['default']))
+
+
 # --- Subclasses for each playable protist ---
 
 class Gintestinalis(Protist):
@@ -101,6 +134,7 @@ class Gmuris(Protist):
         self.can_eat = ['glucose', 'fructose', 'arginine']
         self.danger_resist = []
 
+
 class Spironucleus(Protist):
     """Spironucleus salmonicida"""
     def __init__(self, ps_game):
@@ -117,8 +151,12 @@ class Spironucleus(Protist):
         self.can_eat = ['glucose', 'fructose', 'arginine', 'bacteria']
         self.danger_resist = []
 
-class Trepomonas(Protist):
+
+class Trepomonas(RotatoryProtist):
     """Trepomonas sp."""
+
+    ROT_FRAME_CYCLE = 60
+
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/trepomonas/trepomonas.png')
         self.name = "Trepomonas sp."
@@ -136,31 +174,7 @@ class Trepomonas(Protist):
         self.danger_defence_max = 85
         self.can_eat = ['glucose', 'fructose', 'arginine', 'bacteria']
         self.danger_resist = []
-        self.rot_frame = 0
 
-    def _animation_logic(self):
-        # Animate if moving left/right, or moving up/down with a last_direction
-        if (
-            self.moving_left
-            or (not self.moving_right and (self.moving_up or self.moving_down) and self.last_direction.startswith('left'))
-        ):
-            self.rot_frame = (self.rot_frame + 1) % 40
-            frame = (self.rot_frame // 10) + 1
-            self.set_image(self.images.get(f'left_{frame}', self.images['default']))
-            self.last_direction = f'left_{frame}'
-        elif (
-            self.moving_right
-            or (not self.moving_left and (self.moving_up or self.moving_down) and self.last_direction.startswith('right'))
-            or (not self.moving_left and not self.moving_right and (self.moving_up or self.moving_down))
-        ):
-            # The last clause ensures that if only up/down is pressed, default to right animation
-            self.rot_frame = (self.rot_frame + 1) % 40
-            frame = (self.rot_frame // 10) + 1
-            self.set_image(self.images.get(f'right_{frame}', self.images['default']))
-            self.last_direction = f'right_{frame}'
-        else:
-            # Not moving: show last used image
-            self.set_image(self.images.get(self.last_direction, self.images['default']))
 
 class Hinflata(Protist):
     """Hexamita inflata"""
@@ -177,6 +191,7 @@ class Hinflata(Protist):
         self.danger_defence_max = 90
         self.can_eat = ['glucose', 'fructose', 'maltose', 'arginine', 'bacteria']
         self.danger_resist = []
+
 
 class Kbialata(Protist):
     """Kipferlia bialata"""
@@ -211,6 +226,7 @@ class Mexilis(Protist):
         self.can_eat = ['bacteria']
         self.danger_resist = []
 
+
 class Tvaginalis(Protist):
     """Trichomonas vaginalis"""
     def __init__(self, ps_game):
@@ -221,6 +237,7 @@ class Tvaginalis(Protist):
         self.danger_defence_max = 75
         self.can_eat = ['glucose', 'arginine', 'bacteria']
         self.danger_resist = []
+
 
 # --- Factory function ---
 
