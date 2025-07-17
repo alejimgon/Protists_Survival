@@ -332,7 +332,7 @@ class ProtistSurvival:
                     if event.key == pygame.K_RETURN:
                         waiting = False
                         self.state = "SELECTION"
-                    elif event.key == pygame.K_ESCAPE or event.key == pygame.K_q:
+                    elif event.key == pygame.K_ESCAPE:
                         self.stats.save_high_score()
                         sys.exit()
             
@@ -388,8 +388,8 @@ class ProtistSurvival:
         return pygame.transform.smoothscale(image, new_size)
     
     
-    def _show_message(self, *lines):
-        """Display a message in the center of the screen and wait for user input."""
+    def _show_message(self, *lines, valid_keys=None):
+        """Display a message and wait for a valid key (if given). Returns the key pressed."""
         self.screen.fill(self.settings.intro_bg_color)
         font = pygame.font.SysFont(None, 48)
         for i, msg in enumerate(lines):
@@ -397,13 +397,16 @@ class ProtistSurvival:
             rect = text.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2 + i*60))
             self.screen.blit(text, rect)
         pygame.display.flip()
-        waiting = True
-        while waiting:
+        while True:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     sys.exit()
-                elif e.type == pygame.KEYDOWN or e.type == pygame.MOUSEBUTTONDOWN:
-                    waiting = False
+                elif e.type == pygame.KEYDOWN:
+                    if valid_keys is None or e.key in valid_keys:
+                        return e.key
+                elif e.type == pygame.MOUSEBUTTONDOWN:
+                    if valid_keys is None:
+                        return None
     
 
     def _check_events(self):
@@ -452,9 +455,20 @@ class ProtistSurvival:
                 self.stats.score -= replenish_cost
                 self.stats.danger_defence = min(self.stats.danger_defence + replenish_amount, max_defence)
                 self.sb.prep_score()
-        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
-            self.stats.save_high_score()
-            sys.exit()
+        elif event.key == pygame.K_ESCAPE:
+            if self.state == "GAMEPLAY":
+                key = self._show_message(
+                    "Do you want to exit the game and go back to the selection screen?",
+                    "Press Y or N.",
+                    valid_keys={pygame.K_y, pygame.K_n}
+                )
+                if key == pygame.K_y:
+                    self.stats.save_high_score()
+                    self.state = "SELECTION"
+                # If K_n, do nothing (resume game)
+            else:
+                self.stats.save_high_score()
+                sys.exit()
 
 
     def _check_keyup_events(self, event):
@@ -497,6 +511,7 @@ class ProtistSurvival:
             if not found and entry in all_types_dict:
                 expanded.append(entry)
         return expanded
+    
 
     def _spawn_entity(self, timer_attr, spawn_rate, chance, entity_class, group):
         """Spawn entities like food or dangers based on a timer and chance, supporting categories."""
