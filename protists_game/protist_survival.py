@@ -42,6 +42,10 @@ class ProtistSurvival:
         # Offset for background scrolling
         self.bg_offset_x = 0
 
+        # Level up message
+        self.levelup_message = None
+        self.levelup_message_time = 0
+
         # Map pygame keys to protist movement attributes
         self.key_to_flag = {
             pygame.K_LEFT: 'moving_left',
@@ -252,6 +256,8 @@ class ProtistSurvival:
                 self.stats.level = self.stats.score // 2000 + 1
                 self.settings.increase_speed()
                 self.sb.prep_level()
+                self.levelup_message = f"Level {self.stats.level}"
+                self.levelup_message_time = pygame.time.get_ticks()
 
         for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=False, collided=pygame.sprite.collide_mask):
             # Only affected if not resistant to this danger type
@@ -579,7 +585,17 @@ class ProtistSurvival:
         self.sb.show_score()
         self._draw_entities(self.foods)
         self._draw_entities(self.danger)
-        pygame.display.flip()
+
+        # Draw level up message if active
+        if self.levelup_message and pygame.time.get_ticks() - self.levelup_message_time < 1000:
+            font = pygame.font.SysFont(None, 96)
+            text = font.render(self.levelup_message, True, (220, 0, 0))
+            rect = text.get_rect(center=(self.settings.screen_width//2, self.settings.screen_height//2))
+            self.screen.blit(text, rect)
+        else:
+            self.levelup_message = None
+
+        pygame.display.flip()  
 
 
     def _draw_entities(self, group):
