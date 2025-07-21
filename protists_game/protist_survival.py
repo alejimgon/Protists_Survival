@@ -10,6 +10,7 @@ from protists import get_protist_class
 from energy import ENERGY_TYPES, Energy
 from danger import DANGER_TYPES, Danger
 from group_polygons import *
+from sounds import load_sounds, get_intro_music_path, get_bg_music_path, get_gameover_music_path
 
 class ProtistSurvival:
     """Overall class to manage game assets and behavior."""
@@ -17,8 +18,9 @@ class ProtistSurvival:
 
     def __init__(self):
         """Initialize the game, and create game resources."""
-        self.state = "INTRO" # Possible states: INTRO, SELECTION, PROTIST_SELECTION, GAMEPLAY, GAME_OVER
+        self.state = "INTRO"
         pygame.init()
+        pygame.mixer.init()
         self.clock = pygame.time.Clock()
         self.settings = Settings()
 
@@ -45,6 +47,11 @@ class ProtistSurvival:
         # Level up message
         self.levelup_message = None
         self.levelup_message_time = 0
+
+        # Load sounds
+        self.sounds = load_sounds()
+        self.bg_music_path = get_bg_music_path()
+        self.music_playing = False
 
         # Map pygame keys to protist movement attributes
         self.key_to_flag = {
@@ -75,6 +82,12 @@ class ProtistSurvival:
              
     def run_intro(self):
         """Display the introduction screen."""
+        # Load and play intro music
+        pygame.mixer.music.stop()
+        intro_music_path = get_intro_music_path()
+        pygame.mixer.music.load(intro_music_path)
+        pygame.mixer.music.play(-1)
+
         # Load the intro image
         intro_image = pygame.image.load('images/screen_images/intro_screen.png')
         intro_rect = self.screen.get_rect()
@@ -142,6 +155,7 @@ class ProtistSurvival:
                         )
                     else:
                         self.selected_group = highlighted_group
+                        self.sounds["select"].play()
                         self.state = "PROTIST_SELECTION"
                         waiting = False
 
@@ -207,6 +221,7 @@ class ProtistSurvival:
                             self.selected_protist = name
                             protist_class = get_protist_class(name)
                             if protist_class:
+                                self.sounds["protist_select"].play()
                                 self.protist = protist_class(self)
                                 self.stats = GameStats(self, self.protist)
                                 self.sb = Scoreboard(self, self.protist)
@@ -216,6 +231,7 @@ class ProtistSurvival:
                                     self.bg_image = self._scale_image(bg_img, self.screen.get_rect())
                                 else:
                                     self.bg_image = None
+                                pygame.mixer.music.stop()
                                 self.state = "GAMEPLAY"
                                 waiting = False
                             break
@@ -223,6 +239,15 @@ class ProtistSurvival:
 
     def run_gameplay(self):
         """Start the main loop for the game."""
+        # Pick and play a random background music
+        # Only start music if not already playing
+        if not self.music_playing:
+            pygame.mixer.music.stop()
+            self.bg_music_path = get_bg_music_path()
+            pygame.mixer.music.load(self.bg_music_path)
+            pygame.mixer.music.play(-1)
+            self.music_playing = True
+
         self._check_events() 
         self.protist.update()
 
@@ -250,6 +275,7 @@ class ProtistSurvival:
                 self.stats.score += food.points 
                 self.sb.prep_score()
                 self.sb.check_high_score()
+                self.sounds["collect"].play()
 
             # Level up every 2,000 points
             if self.stats.score // 2000 + 1 > self.stats.level:
@@ -258,12 +284,14 @@ class ProtistSurvival:
                 self.sb.prep_level()
                 self.levelup_message = f"Level {self.stats.level}"
                 self.levelup_message_time = pygame.time.get_ticks()
+                self.sounds["levelup"].play()
 
         for danger in pygame.sprite.spritecollide(self.protist, self.danger, dokill=False, collided=pygame.sprite.collide_mask):
             # Only affected if not resistant to this danger type
             if not hasattr(danger, 'danger_type') or danger.danger_type not in getattr(self.protist, 'danger_resist', []):
                 self.danger.remove(danger)
                 self.stats.danger_defence -= danger.damage  # Use the damage from the danger object
+                self.sounds["damage"].play()
                 
                 # Handle danger collision (decrease danger defence)
                 self.stats.danger_defence -= self.settings.protist_danger_depletion_rate
@@ -288,6 +316,8 @@ class ProtistSurvival:
                         # Game over logic
                         self.stats.save_high_score()
                         self.frozen_bg = self.screen.copy()
+                        self.sounds["gameover"].play()
+                        self.music_playing = False
                         self.state = "GAME_OVER"
 
         # Remove food and danger that has moved off the left edge
@@ -299,6 +329,12 @@ class ProtistSurvival:
     def run_game_over(self):
         """Display the game over screen, with flashing effect if new high score."""
         import time
+
+        # Load and play intro music
+        pygame.mixer.music.stop()
+        gameover_music_path = get_gameover_music_path()
+        pygame.mixer.music.load(gameover_music_path)
+        pygame.mixer.music.play(-1)
 
         # Paths to your images
         game_over_path = 'images/screen_images/game_over/game_over.png'
@@ -459,6 +495,7 @@ class ProtistSurvival:
             max_defence = self.protist.danger_defence_max
             if self.stats.score >= replenish_cost and self.stats.danger_defence < max_defence:
                 self.stats.score -= replenish_cost
+                self.sounds["defence"].play()
                 self.stats.danger_defence = min(self.stats.danger_defence + replenish_amount, max_defence)
                 self.sb.prep_score()
         elif event.key == pygame.K_ESCAPE:
@@ -470,6 +507,11 @@ class ProtistSurvival:
                 )
                 if key == pygame.K_y:
                     self.stats.save_high_score()
+                    self.music_playing = False
+                    pygame.mixer.music.stop()
+                    intro_music_path = get_intro_music_path()
+                    pygame.mixer.music.load(intro_music_path)
+                    pygame.mixer.music.play(-1)
                     self.state = "SELECTION"
                 # If K_n, do nothing (resume game)
             else:
