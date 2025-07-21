@@ -87,7 +87,7 @@ pip install pygame
 - **Spacebar:** Replenish danger defence (costs score)
 - **ESC:** Quit the game
 - **Enter/Return:** Advance from intro and game over screens
-- **Mouse** Select your protist
+- **Mouse:** Select your protist
 <p align="center">
 <img src="images/screen_images/example_screen/m_exilis_example.png" alt="M. exilis game" />
 </p>
