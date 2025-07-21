@@ -85,8 +85,9 @@ pip install pygame
 
 - **Arrow Keys:** Move your protist (left, right, up, down)
 - **Spacebar:** Replenish danger defence (costs score)
-- **Q or ESC:** Quit the game
+- **ESC:** Quit the game
 - **Enter/Return:** Advance from intro and game over screens
+- **Mouse** Select your protist
 <p align="center">
 <img src="images/screen_images/example_screen/m_exilis_example.png" alt="M. exilis game" />
 </p>
@@ -98,22 +99,31 @@ pip install pygame
 
 ```
 protists_game/
-    danger.py
-    energy.py
-    game_stats.py
-    group_polygons.py
-    high_score.txt
-    moving_entity.py
-    protist_survival.py
-    protists.py
-    scoreboard.py
-    settings.py
-    images/
-        backgrounds/
-        food/
-        danger/
-        metamonada/
-        screen_images/
+   danger.py
+   energy.py
+   game_stats.py
+   group_polygons.py
+   high_score.txt
+   moving_entity.py
+   protist_survival.py
+   protists.py
+   scoreboard.py
+   settings.py
+   sounds.py
+images/
+   backgrounds/
+   danger/
+   food/
+   metamonada/
+   screen_images/
+music/
+   background/
+   damage/
+   food/
+   game_over
+   intro/
+   level_up/
+   select/
 ```
 
 ---
@@ -122,6 +132,7 @@ protists_game/
 
 - Game design and code: Alejandro Jiménez-González
 - Protist illustrations and backgrounds: Alejandro Jiménez-González
+- Music and sound effects: Download from [opengameart](https://opengameart.org/) and [freesound](https://freesound.org/) (License CC0)
 
 ---
 
