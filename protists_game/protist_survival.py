@@ -231,6 +231,9 @@ class ProtistSurvival:
                                     self.bg_image = self._scale_image(bg_img, self.screen.get_rect())
                                 else:
                                     self.bg_image = None
+                                self.foods.empty()
+                                self.danger.empty()
+                                self.bg_offset_x = 0
                                 pygame.mixer.music.stop()
                                 self.state = "GAMEPLAY"
                                 waiting = False
