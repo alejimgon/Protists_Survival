@@ -25,8 +25,8 @@ class Settings:
         self.danger_chance = 0.3
 
         # How quickly the game and the protist speed up
-        self.speedup_scale = 1.5
-        self.protist_speedup_scale = 1.1
+        self.speedup_scale = 1.15
+        self.protist_speedup_scale = 1.07
 
         self.initialize_dynamic_settings()
 
