@@ -234,6 +234,7 @@ class ProtistSurvival:
                                 self.foods.empty()
                                 self.danger.empty()
                                 self.bg_offset_x = 0
+                                self.settings.initialize_dynamic_settings()
                                 pygame.mixer.music.stop()
                                 self.state = "GAMEPLAY"
                                 waiting = False
