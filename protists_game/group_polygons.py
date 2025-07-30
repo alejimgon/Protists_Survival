@@ -34,6 +34,7 @@ PROTIST_BACKGROUND_IMAGES = {
     "Monocercomonoides exilis": "images/background/small_intestine.png",
     "Trichomonas vaginalis": "images/background/vaginal_epithelium.png",
     "Trepomonas sp.": "images/background/sediment1.png",
+    "Hexamita inflata": "images/background/sediment2.png",
 }
 
 EUK_GROUP_SELECTION_POLYGONS = {
