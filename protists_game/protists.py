@@ -155,7 +155,7 @@ class Spironucleus(Protist):
 class Trepomonas(RotatoryProtist):
     """Trepomonas sp."""
 
-    ROT_FRAME_CYCLE = 60
+    ROT_FRAME_CYCLE = 20 # Total frames for a full cycle (4 images x 5 frames each)
 
     def __init__(self, ps_game):
         super().__init__(ps_game, 'images/metamonada/trepomonas/trepomonas.png')
