@@ -35,6 +35,8 @@ PROTIST_BACKGROUND_IMAGES = {
     "Trichomonas vaginalis": "images/background/vaginal_epithelium.png",
     "Trepomonas sp.": "images/background/sediment1.png",
     "Hexamita inflata": "images/background/sediment2.png",
+    "Kipferlia bialata": "images/background/sediment3.png",
+    # Add more as you create them
 }
 
 EUK_GROUP_SELECTION_POLYGONS = {
