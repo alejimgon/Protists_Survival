@@ -243,6 +243,29 @@ class Tvaginalis(Protist):
         self.can_eat = ['glucose', 'arginine', 'bacteria']
         self.danger_resist = []
 
+class Jlibera(RotatoryProtist):
+    """Jakoba libera"""
+
+    ROT_FRAME_CYCLE = 20 # Total frames for a full cycle (4 images x 5 frames each)
+
+    def __init__(self, ps_game):
+        super().__init__(ps_game, 'images/discoba/jakoba_libera/jakoba_libera.png')
+        self.name = "Jakoba libera"
+        self.images = {
+            'left_1': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_left.png'),
+            'left_2': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_left2.png'),
+            'left_3': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_left3.png'),
+            'left_4': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_left4.png'),
+            'right_1': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_right.png'),
+            'right_2': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_right2.png'),
+            'right_3': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_right3.png'),
+            'right_4': pygame.image.load('images/discoba/jakoba_libera/jakoba_libera_right4.png'),
+            'default': self.image}
+        self.last_direction = 'default'
+        self.flagellum_extended = False
+        self.can_eat = ['bacterial cluster']
+        self.danger_resist = []
+
 
 # --- Factory function ---
 
@@ -257,6 +280,7 @@ def get_protist_class(name):
         "Kipferlia bialata": Kbialata,
         "Monocercomonoides exilis": Mexilis,
         "Trichomonas vaginalis": Tvaginalis,
+        "Jakoba libera": Jlibera,
         # Add more mappings as you add more protists
     }
     return mapping.get(name)
