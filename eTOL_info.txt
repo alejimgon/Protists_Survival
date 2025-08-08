@@ -61,12 +61,12 @@ Here, I will add all the relevant information about the diferent supergroups and
             - Kinetoplastea: free-living or parasites flagellates
             - Diplonemea (diplonemids): 
         - Heterolobosea: Heterotrophic amoebae, flagellates or amoeboflagellates
-    - Jakobida: Heterotrophic flagellates
+    - Jakobida: Heterotrophic flagellates -->  Jakoba libera, Stygiella agilis, Andalucia godoyi
     - Tsukubamonas: Heterotrophic flagellate
 - Metamonada: Anaerobic protists. Free-living protozoa, intestinal symbionts (especially of wood-eating insects), and many parasites (e.g., Giardia, Trichomonas)
-    - Preaxostyla
-    - Parabasalia: 
-    - Fornicata
+    - Preaxostyla: Monocercomonoides exilis
+    - Parabasalia: Trichomonas vaginalis
+    - Fornicata: Giardia intestinalis, Giardia muris, Spironucleus salmonicida, Hexamita inflata, Trepomonas sp., Kipferlia bialata
 - Malawimonadida: Free-living
 - Ancyromonadida: Free-living
 - Hemimastigophora: Free-living protozoa with two rows of flagella
